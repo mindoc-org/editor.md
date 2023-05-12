@@ -21,9 +21,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 16
+      - run: echo "github.event.release.target_commitish=${{github.event.release.target_commitish}}, github.event_name=${{ github.event_name }}, github.ref=${{ github.ref }}, prerelease=${{github.event.release.prerelease}}, dryrun= ${{ github.event_name != 'release' || github.event.release.target_commitish != 'master' || github.event.release.prerelease }}"
       - run: npm install --only=prod
       - uses: JS-DevTools/npm-publish@v1
         with:
           registry: https://npm.pkg.github.com
           token: ${{ secrets.NPM_TOKEN }}
-          dry-run: ${{ github.event_name != 'release'  || github.ref != 'refs/heads/master' }}
+          dry-run: ${{ github.event_name != 'release' || github.event.release.target_commitish != 'master' || github.event.release.prerelease }}
