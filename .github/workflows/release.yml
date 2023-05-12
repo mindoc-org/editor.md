@@ -1,10 +1,12 @@
 on:
   push:
-#     branches:
-#       - master
-    tags:
-      - "**"
+    branches:
+      - master
   pull_request:
+    branches:
+      - master
+  release:
+    types: [published]
     branches:
       - master
 
@@ -19,9 +21,9 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 16
-      - run: npm install --omit=dev
+      - run: npm install --only=prod
       - uses: JS-DevTools/npm-publish@v1
         with:
           registry: https://npm.pkg.github.com
-          token: ${{ secrets.GITHUB_TOKEN }}
-          dry-run: ${{ github.event_name == 'pull_request' }}
+          token: ${{ secrets.NPM_TOKEN }}
+          dry-run: ${{ github.event_name != 'release'  || github.ref != 'refs/heads/master' }}
