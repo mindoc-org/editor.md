@@ -1,6 +1,6 @@
 {
   "name": "@ibm-skills-network/editor.md",
-  "version": "1.7.16",
+  "version": "1.7.17",
   "description": "Open source online markdown editor.",
   "directories": {
     "doc": "docs",
@@ -10,21 +10,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "https://github.com/ibm-skills-network/npm-registry",
+  "repository": "https://github.com/ibm-skills-network/editor.md",
   "publishConfig": {
-    "registry": "https://github.com/ibm-skills-network/npm-registry"
+    "registry": "https://npm.pkg.github.com"
   },
   "keywords": [
     "editor.md",
     "markdown",
     "editor"
   ],
-  "author": "Pandao",
+  "author": "IBM Skills Network",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pandao/editor.md/issues"
+    "url": "https://github.com/ibm-skills-network/editor.md/issues"
   },
-  "homepage": "https://github.com/pandao/editor.md",
+  "homepage": "https://github.com/ibm-skills-network/editor.md",
   "devDependencies": {
     "dateformatter": "0.1.0",
     "gulp": "4.0.2",

@@ -17,13 +17,16 @@ jobs:
     name: npm package
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16
+          registry-url: https://npm.pkg.github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: echo "github.event.release.target_commitish=${{github.event.release.target_commitish}}, github.event_name=${{ github.event_name }}, github.ref=${{ github.ref }}, prerelease=${{github.event.release.prerelease}}, dryrun= ${{ github.event_name != 'release' || github.event.release.target_commitish != 'master' || github.event.release.prerelease }}"
       - run: npm install --only=prod
-      - uses: JS-DevTools/npm-publish@v1
+      - uses: JS-DevTools/npm-publish@v2
         with:
           registry: https://npm.pkg.github.com
           token: ${{ secrets.NPM_TOKEN }}
