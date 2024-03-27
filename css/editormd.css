@@ -1,13 +1,13 @@
 /*
  * Editor.md
  *
- * @file        editormd.css
- * @version     v1.5.0
+ * @file        editormd.css 
+ * @version     v1.7.17 
  * @description Open source online markdown editor.
  * @license     MIT License
- * @author      Pandao
- * {@link       https://github.com/pandao/editor.md}
- * @updateTime  2021-12-17
+ * @author      IBM Skills Network
+ * {@link       https://github.com/ibm-skills-network/editor.md}
+ * @updateTime  2024-03-27
  */
 
 @charset "UTF-8";
@@ -47,9 +47,9 @@
 .editormd .editormd-markdown-textarea {
   display: none;
 }
-.editormd input[type="text"],
-.editormd input[type="button"],
-.editormd input[type="submit"],
+.editormd input[type=text],
+.editormd input[type=button],
+.editormd input[type=submit],
 .editormd select, .editormd textarea, .editormd button {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -73,16 +73,11 @@
   border-radius: 6px;
 }
 .editormd ::-webkit-scrollbar-thumb:hover {
-  -webkit-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
-  /* Webkit browsers */
-  -moz-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
-  /* Firefox */
-  -ms-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
-  /* IE9 */
-  -o-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
-  /* Opera(Old) */
-  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
-  /* IE9+, News */
+  -webkit-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25); /* Webkit browsers */
+  -moz-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25); /* Firefox */
+  -ms-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25); /* IE9 */
+  -o-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25); /* Opera(Old) */
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25); /* IE9+, News */
   background-color: rgba(0, 0, 0, 0.4);
 }
 
@@ -98,92 +93,23 @@
   width: 100%;
   min-height: 37px;
   background: #fff;
-  display: flex;
-  flex-direction: column;
+  display: none;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 10;
   border-bottom: 1px solid #ddd;
-  font-family: IBM Plex Sans;
 }
 
 .editormd-toolbar-container {
-  padding: 6px 10px;
+  padding: 0 8px;
   min-height: 35px;
-  background-color: #2B2827;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
 }
-
-.editormd-titlebar-container {
-  width: 100%;
-  height: 57px;
-  padding: 10px 25px;
-  background-color: #2C2C2C;
-  box-shadow: 0px 0px 5px 0px #FFFFFF;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-  z-index: 1;
-}
-
-.editormd-titlebar-section {
-  display: flex;
-  align-items: center;
-  gap: 0 10px;
-  position: relative;
-}
-
-span.editormd-titlebar {
-  color: #A0A6AC;
-  font-size: 0.8rem;
-}
-
-span.editormd-titlebar-dropdown-chevron {
-  height: 15px;
-  width: 15px;
-  mask-position: center;
-  -webkit-mask-position: center;
-  mask-repeat: no-repeat;
-  -webkit-mask-repeat: no-repeat;
-  mask-size: 100% 100%;
-  -webkit-mask-size: 100% 100%;
-  background-color: #FFFFFF;
-  mask-image: url(../images/chevron-down.svg);
-  -webkit-mask-image: url(../images/chevron-down.svg);
-  display: inline-block;
-  vertical-align: text-top;
-}
-
-button.editormd-titlebar-button {
-  border: none;
-  background: none;
-  color: #DDE1E6;
-  padding: 2px 10px;
-  display: flex;
-  align-items: center;
-  gap: 0 5px;
-}
-
-.editormd-titlebar-section.right > button.editormd-titlebar-button:last-of-type {
-  border: 2px solid #F2F4F8;
-  border-radius: 6px;
-  padding: 2px 20px;
-}
-
-.editormd-titlebar-section.right > button.editormd-titlebar-button:disabled {
-  color: #8D8D8D;
-}
-
-.editormd-titlebar-section.right > button.editormd-titlebar-button:last-of-type:disabled {
-  border-color: #8D8D8D;
-}
-
 
 .editormd-menu {
   margin: 0;
@@ -192,21 +118,17 @@ button.editormd-titlebar-button {
 }
 .editormd-menu > li {
   margin: 0;
-  padding: 5px 3px;
+  padding: 5px 1px;
   display: inline-block;
   position: relative;
 }
 .editormd-menu > li.divider {
   display: inline-block;
   text-indent: -9999px;
-  margin: 0 10px;
-  height: 20px;
-  width: 1px;
-  background: #ddd;
-  vertical-align: middle;
-  padding: 0;
+  margin: 0 5px;
+  height: 65%;
+  border-right: 1px solid #ddd;
 }
-
 .editormd-menu > li > a {
   outline: 0;
   color: #666;
@@ -221,12 +143,9 @@ button.editormd-titlebar-button {
   -o-border-radius: 2px;
   border-radius: 2px;
   border: 1px solid #fff;
-  -webkit-transition: all 300ms ease-out;
-  /* Safari, Chrome */
-  -moz-transition: all 300ms ease-out;
-  /* Firefox 4.0~16.0 */
-  transition: all 300ms ease-out;
-  /* IE >9, FF >15, Opera >12.0 */
+  -webkit-transition: all 300ms ease-out; /* Safari, Chrome */
+  -moz-transition: all 300ms ease-out; /* Firefox 4.0~16.0 */
+  transition: all 300ms ease-out; /* IE >9, FF >15, Opera >12.0 */
 }
 .editormd-menu > li > a:hover, .editormd-menu > li > a.active {
   border: 1px solid #ddd;
@@ -237,18 +156,6 @@ button.editormd-titlebar-button {
   display: block;
   padding: 5px;
 }
-
-.editormd-menu > li i.fa > span.icon-text {
-  font-family: IBM Plex Sans;
-  font-size: 0.9rem;
-  color: #DDE1E6;
-  font-weight: 500;
-}
-
-.editormd-menu > li i.fa > span.icon-text.dropdown {
-  margin-left: 12px;
-}
-
 .editormd-menu > li > a > .editormd-bold {
   padding: 5px 2px;
   display: inline-block;
@@ -261,7 +168,6 @@ button.editormd-titlebar-button {
   margin-left: 3px;
 }
 
-
 .editormd-dropdown-menu {
   display: none;
   background: #fff;
@@ -272,16 +178,11 @@ button.editormd-titlebar-button {
   top: 33px;
   left: 0;
   z-index: 100;
-  -webkit-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.15);
-  /* Webkit browsers */
-  -moz-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.15);
-  /* Firefox */
-  -ms-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.15);
-  /* IE9 */
-  -o-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.15);
-  /* Opera(Old) */
-  box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.15);
-  /* IE9+, News */
+  -webkit-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.15); /* Webkit browsers */
+  -moz-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.15); /* Firefox */
+  -ms-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.15); /* IE9 */
+  -o-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.15); /* Opera(Old) */
+  box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.15); /* IE9+, News */
 }
 .editormd-dropdown-menu:before, .editormd-dropdown-menu:after {
   width: 0;
@@ -308,12 +209,9 @@ button.editormd-titlebar-button {
 }
 .editormd-dropdown-menu > li > a:hover {
   background: #f6f6f6;
-  -webkit-transition: all 300ms ease-out;
-  /* Safari, Chrome */
-  -moz-transition: all 300ms ease-out;
-  /* Firefox 4.0~16.0 */
-  transition: all 300ms ease-out;
-  /* IE >9, FF >15, Opera >12.0 */
+  -webkit-transition: all 300ms ease-out; /* Safari, Chrome */
+  -moz-transition: all 300ms ease-out; /* Firefox 4.0~16.0 */
+  transition: all 300ms ease-out; /* IE >9, FF >15, Opera >12.0 */
 }
 .editormd-dropdown-menu > li + li {
   border-top: 1px solid #ddd;
@@ -337,29 +235,23 @@ button.editormd-titlebar-button {
   position: fixed;
   z-index: 99999;
   display: none;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  /* Webkit browsers */
-  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  /* Firefox */
-  -ms-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  /* IE9 */
-  -o-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  /* Opera(Old) */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  /* IE9+, News */
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Webkit browsers */
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Firefox */
+  -ms-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* IE9 */
+  -o-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Opera(Old) */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* IE9+, News */
   background: #fff;
   font-size: 14px;
 }
 
 .editormd-dialog-container {
   position: relative;
-  padding-top: 28px;
-  padding: 28px;
+  padding: 20px;
   line-height: 1.4;
 }
 .editormd-dialog-container h1 {
@@ -380,50 +272,28 @@ button.editormd-titlebar-button {
   color: #999;
   padding: 3px 8px;
   border: 1px solid #ddd;
-  border-radius: 3px;
 }
 
 .editormd-dialog-close {
-  text-decoration: none;
-  -webkit-transition: all 300ms ease-out;
-  /* Safari, Chrome */
-  -moz-transition: all 300ms ease-out;
-  /* Firefox 4.0~16.0 */
-  transition: all 300ms ease-out;
-  /* IE >9, FF >15, Opera >12.0 */
-  height: 12px;
-  width: 12px;
-  mask-position: center;
-  -webkit-mask-position: center;
-  mask-repeat: no-repeat;
-  -webkit-mask-repeat: no-repeat;
-  mask-size: 100% 100%;
-  -webkit-mask-size: 100% 100%;
-  background-color: #8D8D8D;
-  mask-image: url(../images/close-small.svg);
-  -webkit-mask-image: url(../images/close-small.svg);
-  vertical-align: text-top;
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 18px;
+  color: #ccc;
+  -webkit-transition: color 300ms ease-out; /* Safari, Chrome */
+  -moz-transition: color 300ms ease-out; /* Firefox 4.0~16.0 */
+  transition: color 300ms ease-out; /* IE >9, FF >15, Opera >12.0 */
 }
-
 .editormd-dialog-close:hover {
-  background-color: #ccc;
-  text-decoration: none;
+  color: #999;
 }
 
 .editormd-dialog-header {
-  margin: 0 28px;
-  padding-top: 20px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #eee;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  -webkit-transition: background 300ms ease-out;
-  /* Safari, Chrome */
-  -moz-transition: background 300ms ease-out;
-  /* Firefox 4.0~16.0 */
-  transition: background 300ms ease-out;
-  /* IE >9, FF >15, Opera >12.0 */
+  padding: 11px 20px;
+  border-bottom: 1px solid #eee;
+  -webkit-transition: background 300ms ease-out; /* Safari, Chrome */
+  -moz-transition: background 300ms ease-out; /* Firefox 4.0~16.0 */
+  transition: background 300ms ease-out; /* IE >9, FF >15, Opera >12.0 */
 }
 .editormd-dialog-header:hover {
   background: #f6f6f6;
@@ -431,11 +301,10 @@ button.editormd-titlebar-button {
 
 .editormd-dialog-title {
   font-size: 14px;
-  font-weight: bolder;
 }
 
 .editormd-dialog-footer {
-  padding-top: 20px;
+  padding: 10px 0 0 0;
   text-align: right;
 }
 
@@ -489,24 +358,18 @@ button.editormd-titlebar-button {
 .editormd-mask {
   position: fixed;
   background: #000;
-  opacity: 0.2;
-  /* W3C */
-  filter: alpha(opacity=20);
-  /* IE */
+  opacity: 0.2; /* W3C */
+  filter: alpha(opacity=20); /* IE */
   z-index: 99998;
 }
 
 .editormd-container-mask,
 .editormd-dialog-mask-con {
   background: url(../images/loading.gif) no-repeat center center;
-  -webkit-background-size: 32px 32px;
-  /* Chrome, iOS, Safari */
-  -moz-background-size: 32px 32px;
-  /* Firefox 3.6~4.0 */
-  -o-background-size: 32px 32px;
-  /* Opera 9.5 */
-  background-size: 32px 32px;
-  /* IE9+, New */
+  -webkit-background-size: 32px 32px; /* Chrome, iOS, Safari */
+  -moz-background-size: 32px 32px; /* Firefox 3.6~4.0 */
+  -o-background-size: 32px 32px; /* Opera 9.5 */
+  background-size: 32px 32px; /* IE9+, New */
 }
 
 .editormd-container-mask {
@@ -566,12 +429,9 @@ button.editormd-titlebar-button {
   vertical-align: middle;
   border: 1px solid #ddd;
   text-decoration: none;
-  -webkit-transition: background-color 300ms ease-out, color 100ms ease-in;
-  /* Safari, Chrome */
-  -moz-transition: background-color 300ms ease-out, color 100ms ease-in;
-  /* Firefox 4.0~16.0 */
-  transition: background-color 300ms ease-out, color 100ms ease-in;
-  /* IE >9, FF >15, Opera >12.0 */
+  -webkit-transition: background-color 300ms ease-out, color 100ms ease-in; /* Safari, Chrome */
+  -moz-transition: background-color 300ms ease-out, color 100ms ease-in; /* Firefox 4.0~16.0 */
+  transition: background-color 300ms ease-out, color 100ms ease-in; /* IE >9, FF >15, Opera >12.0 */
 }
 .editormd-grid-table-row a.selected {
   color: #666;
@@ -585,7 +445,6 @@ button.editormd-titlebar-button {
 .editormd-tab-head {
   list-style: none;
   border-bottom: 1px solid #ddd;
-  margin-bottom: 0;
 }
 .editormd-tab-head li {
   display: inline-block;
@@ -609,12 +468,9 @@ button.editormd-titlebar-button {
   -o-border-top-right-radius: 3px;
   border-top-right-radius: 3px;
   background: #f6f6f6;
-  -webkit-transition: all 300ms ease-out;
-  /* Safari, Chrome */
-  -moz-transition: all 300ms ease-out;
-  /* Firefox 4.0~16.0 */
-  transition: all 300ms ease-out;
-  /* IE >9, FF >15, Opera >12.0 */
+  -webkit-transition: all 300ms ease-out; /* Safari, Chrome */
+  -moz-transition: all 300ms ease-out; /* Firefox 4.0~16.0 */
+  transition: all 300ms ease-out; /* IE >9, FF >15, Opera >12.0 */
 }
 .editormd-tab-head li a:hover {
   color: #666;
@@ -635,23 +491,18 @@ button.editormd-titlebar-button {
 
 .editormd-form {
   color: #666;
-  display: flex;
-  flex-direction: column;
 }
 .editormd-form label {
   float: left;
   display: block;
   width: 75px;
   text-align: left;
-  padding-bottom: 7px;
+  padding: 7px 0 15px 5px;
   margin: 0 0 2px;
   font-weight: normal;
-  font-size: 0.8rem;
-  width: 100%;
 }
 .editormd-form br {
   clear: both;
-  margin-bottom: 20px;
 }
 .editormd-form iframe {
   display: none;
@@ -659,21 +510,19 @@ button.editormd-titlebar-button {
 .editormd-form input:focus {
   outline: 0;
 }
-.editormd-form input[type="text"], .editormd-form input[type="number"] {
+.editormd-form input[type=text], .editormd-form input[type=number] {
   color: #999;
   padding: 8px;
   border: 1px solid #ddd;
-  border-radius: 3px;
 }
-.editormd-form input[type="number"] {
+.editormd-form input[type=number] {
   width: 40px;
   display: inline-block;
   padding: 6px 8px;
 }
-.editormd-form input[type="text"] {
+.editormd-form input[type=text] {
   display: inline-block;
-  width: 100%;
-  flex: 1;
+  width: 264px;
 }
 .editormd-form .fa-btns {
   display: inline-block;
@@ -690,19 +539,18 @@ button.editormd-titlebar-button {
 }
 .editormd-form .fa-btns label {
   float: none;
-  display: flex;
-  gap: 0 2px;
+  display: inline-block;
   width: auto;
   text-align: left;
   padding: 0 0 0 5px;
   cursor: pointer;
 }
 
-.editormd-form input[type="submit"], .editormd-form .editormd-btn, .editormd-form button,
-.editormd-dialog-container input[type="submit"],
+.editormd-form input[type=submit], .editormd-form .editormd-btn, .editormd-form button,
+.editormd-dialog-container input[type=submit],
 .editormd-dialog-container .editormd-btn,
 .editormd-dialog-container button,
-.editormd-dialog-footer input[type="submit"],
+.editormd-dialog-footer input[type=submit],
 .editormd-dialog-footer .editormd-btn,
 .editormd-dialog-footer button {
   color: #666;
@@ -716,18 +564,15 @@ button.editormd-titlebar-button {
   -ms-border-radius: 3px;
   -o-border-radius: 3px;
   border-radius: 3px;
-  -webkit-transition: all 300ms ease-out;
-  /* Safari, Chrome */
-  -moz-transition: all 300ms ease-out;
-  /* Firefox 4.0~16.0 */
-  transition: all 300ms ease-out;
-  /* IE >9, FF >15, Opera >12.0 */
+  -webkit-transition: background 300ms ease-out; /* Safari, Chrome */
+  -moz-transition: background 300ms ease-out; /* Firefox 4.0~16.0 */
+  transition: background 300ms ease-out; /* IE >9, FF >15, Opera >12.0 */
 }
-.editormd-form input[type="submit"]:hover, .editormd-form .editormd-btn:hover, .editormd-form button:hover,
-.editormd-dialog-container input[type="submit"]:hover,
+.editormd-form input[type=submit]:hover, .editormd-form .editormd-btn:hover, .editormd-form button:hover,
+.editormd-dialog-container input[type=submit]:hover,
 .editormd-dialog-container .editormd-btn:hover,
 .editormd-dialog-container button:hover,
-.editormd-dialog-footer input[type="submit"]:hover,
+.editormd-dialog-footer input[type=submit]:hover,
 .editormd-dialog-footer .editormd-btn:hover,
 .editormd-dialog-footer button:hover {
   background: #eee;
@@ -735,17 +580,12 @@ button.editormd-titlebar-button {
 .editormd-form .editormd-btn,
 .editormd-dialog-container .editormd-btn,
 .editormd-dialog-footer .editormd-btn {
-  padding: 5px 8px 4px\0;
+  padding: 5px 8px 4px\0 ;
 }
 .editormd-form .editormd-btn + .editormd-btn,
 .editormd-dialog-container .editormd-btn + .editormd-btn,
 .editormd-dialog-footer .editormd-btn + .editormd-btn {
   margin-left: 8px;
-}
-
-.editormd-dialog .form-flex {
-  display: flex;
-  align-items: center;
 }
 
 .editormd-file-input {
@@ -755,7 +595,7 @@ button.editormd-titlebar-button {
   position: relative;
   display: inline-block;
 }
-.editormd-file-input input[type="file"] {
+.editormd-file-input input[type=file] {
   width: 75px;
   height: 32px;
   opacity: 0;
@@ -766,10 +606,10 @@ button.editormd-titlebar-button {
   top: 0;
   right: 0;
 }
-.editormd-file-input input[type="file"]::-webkit-file-upload-button {
+.editormd-file-input input[type=file]::-webkit-file-upload-button {
   visibility: hidden;
 }
-.editormd-file-input:hover input[type="submit"] {
+.editormd-file-input:hover input[type=submit] {
   background: #eee;
 }
 
@@ -788,11 +628,12 @@ button.editormd-titlebar-button {
   position: absolute;
   top: 35px;
   right: 0;
-  right: -1px\0;
+  right: -1px\0 ;
   overflow: auto;
   line-height: 1.6;
   display: none;
   background: #fff;
+  z-index: 10;
 }
 
 .editormd .CodeMirror {
@@ -800,19 +641,23 @@ button.editormd-titlebar-button {
   float: left;
   border-right: 1px solid #ddd;
   font-size: 14px;
-  font-family: Consolas, "YaHei Consolas Hybrid", "微软雅黑", "Meiryo UI", "Malgun Gothic", "Segoe UI", "Trebuchet MS", Helvetica, "Monaco", courier, monospace;
+  font-family: "YaHei Consolas Hybrid", Consolas, "微软雅黑", "Meiryo UI", "Malgun Gothic", "Segoe UI", "Trebuchet MS", Helvetica, "Monaco", courier, monospace;
   line-height: 1.6;
   margin-top: 35px;
 }
-.editormd .CodeMirror pre.CodeMirror-line,
-.editormd .CodeMirror pre.CodeMirror-line-like {
+.editormd .CodeMirror pre {
   font-size: 14px;
   padding: 0 12px;
 }
 .editormd .CodeMirror-linenumbers {
   padding: 0 5px;
 }
-
+.editormd .CodeMirror-selected {
+  background: #70B7FF;
+}
+.editormd .CodeMirror-focused .CodeMirror-selected {
+  background: #70B7FF;
+}
 .editormd .CodeMirror, .editormd .CodeMirror-scroll, .editormd .editormd-preview {
   -webkit-overflow-scrolling: touch;
 }
@@ -849,7 +694,7 @@ button.editormd-titlebar-button {
 /* FONT PATH
  * -------------------------- */
 @font-face {
-  font-family: 'FontAwesome';
+  font-family: "FontAwesome";
   src: url("../fonts/fontawesome-webfont.eot?v=4.3.0");
   src: url("../fonts/fontawesome-webfont.eot?#iefix&v=4.3.0") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff2?v=4.3.0") format("woff2"), url("../fonts/fontawesome-webfont.woff?v=4.3.0") format("woff"), url("../fonts/fontawesome-webfont.ttf?v=4.3.0") format("truetype"), url("../fonts/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular") format("svg");
   font-weight: normal;
@@ -916,9 +761,9 @@ button.editormd-titlebar-button {
 }
 
 .fa-border {
-  padding: .2em .25em .15em;
+  padding: 0.2em 0.25em 0.15em;
   border: solid 0.08em #eeeeee;
-  border-radius: .1em;
+  border-radius: 0.1em;
 }
 
 .pull-right {
@@ -930,11 +775,11 @@ button.editormd-titlebar-button {
 }
 
 .fa.pull-left {
-  margin-right: .3em;
+  margin-right: 0.3em;
 }
 
 .fa.pull-right {
-  margin-left: .3em;
+  margin-left: 0.3em;
 }
 
 .fa-spin {
@@ -3193,7 +3038,7 @@ button.editormd-titlebar-button {
 
 /*! prefixes.scss v0.1.0 | Author: Pandao | https://github.com/pandao/prefixes.scss | MIT license | Copyright (c) 2015 */
 @font-face {
-  font-family: 'editormd-logo';
+  font-family: "editormd-logo";
   src: url("../fonts/editormd-logo.eot?-5y8q6h");
   src: url("../fonts/editormd-logo.eot?#iefix-5y8q6h") format("embedded-opentype"), url("../fonts/editormd-logo.woff?-5y8q6h") format("woff"), url("../fonts/editormd-logo.ttf?-5y8q6h") format("truetype"), url("../fonts/editormd-logo.svg?-5y8q6h#icomoon") format("svg");
   font-weight: normal;
@@ -3208,7 +3053,7 @@ button.editormd-titlebar-button {
 .editormd-logo-6x,
 .editormd-logo-7x,
 .editormd-logo-8x {
-  font-family: 'editormd-logo';
+  font-family: "editormd-logo";
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -3231,9 +3076,9 @@ button.editormd-titlebar-button {
 .editormd-logo-6x:before,
 .editormd-logo-7x:before,
 .editormd-logo-8x:before {
-  content: "\e1987";
-  /*
-  HTML Entity &#xe1987;
+  content: "󡦇";
+  /* 
+  HTML Entity &#xe1987; 
   example: <span class="editormd-logo">&#xe1987;</span>
   */
 }
@@ -3347,7 +3192,7 @@ button.editormd-titlebar-button {
   line-height: normal;
 }
 
-.markdown-body input[type="checkbox"] {
+.markdown-body input[type=checkbox] {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   padding: 0;
@@ -3489,7 +3334,7 @@ button.editormd-titlebar-button {
 }
 
 .markdown-body .octicon-link:before {
-  content: '\f05c';
+  content: "\f05c";
 }
 
 .markdown-body > *:first-child {
@@ -3727,7 +3572,7 @@ button.editormd-titlebar-button {
 .markdown-body code:before,
 .markdown-body code:after {
   letter-spacing: -0.2em;
-  content: "\00a0";
+  content: " ";
 }
 
 .markdown-body pre > code {
@@ -3991,7 +3836,7 @@ button.editormd-titlebar-button {
   padding: 0;
 }
 .editormd-preview-container pre, .editormd-preview-container code, .editormd-preview-container kbd, .editormd-html-preview pre, .editormd-html-preview code, .editormd-html-preview kbd {
-  font-family: Consolas, "YaHei Consolas Hybrid", "Meiryo UI", "Malgun Gothic", "Segoe UI", "Trebuchet MS", Helvetica, monospace, monospace;
+  font-family: "YaHei Consolas Hybrid", Consolas, "Meiryo UI", "Malgun Gothic", "Segoe UI", "Trebuchet MS", Helvetica, monospace, monospace;
 }
 .editormd-preview-container table thead tr, .editormd-html-preview table thead tr {
   background-color: #F8F8F8;
@@ -4018,111 +3863,80 @@ button.editormd-titlebar-button {
 }
 .editormd-preview-container .sequence-diagram text, .editormd-preview-container .flowchart text, .editormd-html-preview .sequence-diagram text, .editormd-html-preview .flowchart text {
   font-size: 15px !important;
-  font-family: Consolas, "YaHei Consolas Hybrid", "Microsoft YaHei", "Malgun Gothic", "Segoe UI", Helvetica, Arial !important;
+  font-family: "YaHei Consolas Hybrid", Consolas, "Microsoft YaHei", "Malgun Gothic", "Segoe UI", Helvetica, Arial !important;
 }
 
 /*! Pretty printing styles. Used with prettify.js. */
 /* SPAN elements with the classes below are added by prettyprint. */
 .pln {
   color: #000;
-}
-
-/* plain text */
+} /* plain text */
 @media screen {
   .str {
     color: #080;
-  }
-
-  /* string content */
+  } /* string content */
   .kwd {
     color: #008;
-  }
-
-  /* a keyword */
+  } /* a keyword */
   .com {
     color: #800;
-  }
-
-  /* a comment */
+  } /* a comment */
   .typ {
     color: #606;
-  }
-
-  /* a type name */
+  } /* a type name */
   .lit {
     color: #066;
-  }
-
-  /* a literal value */
+  } /* a literal value */
   /* punctuation, lisp open bracket, lisp close bracket */
   .pun, .opn, .clo {
     color: #660;
   }
-
   .tag {
     color: #008;
-  }
-
-  /* a markup tag name */
+  } /* a markup tag name */
   .atn {
     color: #606;
-  }
-
-  /* a markup attribute name */
+  } /* a markup attribute name */
   .atv {
     color: #080;
-  }
-
-  /* a markup attribute value */
+  } /* a markup attribute value */
   .dec, .var {
     color: #606;
-  }
-
-  /* a declaration; a variable name */
+  } /* a declaration; a variable name */
   .fun {
     color: red;
-  }
-
-  /* a function name */
+  } /* a function name */
 }
 /* Use higher contrast and text-weight for printable form. */
 @media print, projection {
   .str {
     color: #060;
   }
-
   .kwd {
     color: #006;
     font-weight: bold;
   }
-
   .com {
     color: #600;
     font-style: italic;
   }
-
   .typ {
     color: #404;
     font-weight: bold;
   }
-
   .lit {
     color: #044;
   }
-
   .pun, .opn, .clo {
     color: #440;
   }
-
   .tag {
     color: #006;
     font-weight: bold;
   }
-
   .atn {
     color: #404;
   }
-
   .atv {
     color: #060;
   }
@@ -4137,9 +3951,7 @@ pre.prettyprint {
 ol.linenums {
   margin-top: 0;
   margin-bottom: 0;
-}
-
-/* IE indents via margin-left */
+} /* IE indents via margin-left */
 li.L0,
 li.L1,
 li.L2,
@@ -4163,6 +3975,7 @@ li.L9 {
 .editormd-preview-container pre.prettyprint, .editormd-html-preview pre.prettyprint {
   padding: 10px;
   border: 1px solid #ddd;
+  white-space: pre-wrap;
   word-wrap: break-word;
 }
 .editormd-preview-container ol.linenums, .editormd-html-preview ol.linenums {
@@ -4209,16 +4022,11 @@ li.L9 {
   -ms-border-radius: 4px;
   -o-border-radius: 4px;
   border-radius: 4px;
-  -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-  /* Webkit browsers */
-  -moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-  /* Firefox */
-  -ms-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-  /* IE9 */
-  -o-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-  /* Opera(Old) */
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-  /* IE9+, News */
+  -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* Webkit browsers */
+  -moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* Firefox */
+  -ms-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* IE9 */
+  -o-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* Opera(Old) */
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* IE9+, News */
 }
 .editormd-preview-container .editormd-toc-menu > .markdown-toc > ul > li ul, .editormd-html-preview .editormd-toc-menu > .markdown-toc > ul > li ul {
   width: 100%;
@@ -4236,12 +4044,9 @@ li.L9 {
   color: #666;
   padding: 6px 10px;
   display: block;
-  -webkit-transition: background-color 500ms ease-out;
-  /* Safari, Chrome */
-  -moz-transition: background-color 500ms ease-out;
-  /* Firefox 4.0~16.0 */
-  transition: background-color 500ms ease-out;
-  /* IE >9, FF >15, Opera >12.0 */
+  -webkit-transition: background-color 500ms ease-out; /* Safari, Chrome */
+  -moz-transition: background-color 500ms ease-out; /* Firefox 4.0~16.0 */
+  transition: background-color 500ms ease-out; /* IE >9, FF >15, Opera >12.0 */
 }
 .editormd-preview-container .editormd-toc-menu > .markdown-toc > ul > li a:hover, .editormd-html-preview .editormd-toc-menu > .markdown-toc > ul > li a:hover {
   background-color: #f6f6f6;
@@ -4254,16 +4059,11 @@ li.L9 {
   top: 32px;
   left: 10%;
   display: none;
-  -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-  /* Webkit browsers */
-  -moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-  /* Firefox */
-  -ms-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-  /* IE9 */
-  -o-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-  /* Opera(Old) */
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-  /* IE9+, News */
+  -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* Webkit browsers */
+  -moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* Firefox */
+  -ms-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* IE9 */
+  -o-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* Opera(Old) */
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* IE9+, News */
 }
 .editormd-preview-container .editormd-toc-menu > .markdown-toc li > ul:before, .editormd-preview-container .editormd-toc-menu > .markdown-toc li > ul:after, .editormd-html-preview .editormd-toc-menu > .markdown-toc li > ul:before, .editormd-html-preview .editormd-toc-menu > .markdown-toc li > ul:after {
   pointer-events: pointer-events;
@@ -4306,12 +4106,9 @@ li.L9 {
   padding: 5px 10px;
   border-radius: 4px;
   display: inline-block;
-  -webkit-transition: background-color 500ms ease-out;
-  /* Safari, Chrome */
-  -moz-transition: background-color 500ms ease-out;
-  /* Firefox 4.0~16.0 */
-  transition: background-color 500ms ease-out;
-  /* IE >9, FF >15, Opera >12.0 */
+  -webkit-transition: background-color 500ms ease-out; /* Safari, Chrome */
+  -moz-transition: background-color 500ms ease-out; /* Firefox 4.0~16.0 */
+  transition: background-color 500ms ease-out; /* IE >9, FF >15, Opera >12.0 */
 }
 .editormd-preview-container .editormd-toc-menu .toc-menu-btn:hover, .editormd-html-preview .editormd-toc-menu .toc-menu-btn:hover {
   background-color: #f6f6f6;
@@ -4366,12 +4163,9 @@ hr.editormd-page-break {
   top: 25px;
   right: 35px;
   z-index: 19;
-  -webkit-transition: background-color 300ms ease-out;
-  /* Safari, Chrome */
-  -moz-transition: background-color 300ms ease-out;
-  /* Firefox 4.0~16.0 */
-  transition: background-color 300ms ease-out;
-  /* IE >9, FF >15, Opera >12.0 */
+  -webkit-transition: background-color 300ms ease-out; /* Safari, Chrome */
+  -moz-transition: background-color 300ms ease-out; /* Firefox 4.0~16.0 */
+  transition: background-color 300ms ease-out; /* IE >9, FF >15, Opera >12.0 */
 }
 .editormd-preview-close-btn:hover {
   background-color: #999;
@@ -4390,6 +4184,9 @@ hr.editormd-page-break {
 .editormd-preview-theme-dark .editormd-preview-container {
   color: #888;
   background-color: #2C2827;
+}
+.editormd-preview-theme-dark .editormd-preview-container pre.prettyprint {
+  border: none;
 }
 .editormd-preview-theme-dark .editormd-preview-container blockquote {
   color: #555;
@@ -4471,8 +4268,7 @@ hr.editormd-page-break {
 }
 
 @media screen {
-  .editormd-preview-theme-dark {
-    /* string content */
+  .editormd-preview-theme-dark { /* string content */
     /* a keyword */
     /* a comment */
     /* a type name */
@@ -4542,319 +4338,19 @@ hr.editormd-page-break {
 }
 .editormd-theme-dark .editormd-toolbar {
   background: #1A1A17;
-  border-color: #1A1A17;
+  border-color: #1a1a17;
 }
 .editormd-theme-dark .editormd-menu > li > a {
-  color: #DDE1E6;
-  border-color: #2B2827;
+  color: #777;
+  border-color: #1a1a17;
 }
 .editormd-theme-dark .editormd-menu > li > a:hover, .editormd-theme-dark .editormd-menu > li > a.active {
-  border-color: #2B2827;
-  background: #3f3f3f;
+  border-color: #333;
+  background: #333;
 }
 .editormd-theme-dark .editormd-menu > li.divider {
-  background: #697077;
+  border-right: 1px solid #111;
 }
 .editormd-theme-dark .CodeMirror {
   border-right: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.editormd-theme-dark .editormd-dialog {
-  font-family: Inter;
-  background: #2C2C2C;
-  color: #F4F4F4;
-  box-shadow: 0px 3px 15px 0px #000000BF;
-  -o-box-shadow: 0px 3px 15px 0px #000000BF;
-  -ms-box-shadow: 0px 3px 15px 0px #000000BF;
-  -moz-box-shadow: 0px 3px 15px 0px #000000BF;
-  -webkit-box-shadow: 0px 3px 15px 0px #000000BF;
-}
-
-.editormd-theme-dark .editormd-dialog-header {
-  border-bottom-color: #444444;
-}
-
-.editormd-theme-dark .editormd-dialog-header:hover {
-  background: #2C2C2C;
-}
-
-.editormd-theme-dark .editormd-form {
-  color: #F4F4F4;
-}
-
-.editormd-theme-dark .editormd-form input[type="text"],
-.editormd-theme-dark .editormd-form input[type="number"] {
-  color: #8D8D8D;
-  background: #2C2C2C;
-  border-color: #8D8D8D;
-}
-
-.editormd-theme-dark .editormd-dialog-footer .editormd-btn.editormd-enter-btn {
-  background: #4579B2;
-  border-color: #4579B2;
-  color: #FFFFFF;
-}
-
-  .editormd-theme-dark .editormd-dialog-footer .editormd-btn.editormd-enter-btn:hover {
-    background: #5795D9;
-  border-color: #5795D9;
-  }
-
-.editormd-theme-dark .editormd-form input[type="submit"],
-.editormd-theme-dark .editormd-form .editormd-btn,
-.editormd-theme-dark .editormd-form button,
-.editormd-theme-dark .editormd-dialog-container input[type="submit"],
-.editormd-theme-dark .editormd-dialog-container .editormd-btn,
-.editormd-theme-dark .editormd-dialog-container button,
-.editormd-theme-dark .editormd-dialog-footer input[type="submit"],
-.editormd-theme-dark .editormd-dialog-footer .editormd-btn,
-.editormd-theme-dark .editormd-dialog-footer button {
-  background: #393939;
-  border-color: #393939;
-  color: #C6C6C6;
-}
-
-
-.editormd-theme-dark .editormd-form input[type="submit"]:hover,
-.editormd-theme-dark .editormd-form .editormd-btn:hover,
-.editormd-theme-dark .editormd-form button:hover,
-.editormd-theme-dark .editormd-dialog-container input[type="submit"]:hover,
-.editormd-theme-dark .editormd-dialog-container .editormd-btn:hover,
-.editormd-theme-dark .editormd-dialog-container button:hover,
-.editormd-theme-dark .editormd-dialog-footer input[type="submit"]:hover,
-.editormd-theme-dark .editormd-dialog-footer .editormd-btn:hover,
-.editormd-theme-dark .editormd-dialog-footer button:hover {
-  background: #8D8D8D;
-  border-color: #8D8D8D;
-}
-
-.editormd-theme-dark .editormd-file-input:hover input[type="submit"] {
-  background: #8D8D8D;
-  border-color: #8D8D8D;
-}
-
-.editormd-theme-dark .editormd-dialog-title {
-  font-weight: normal;
-}
-
-/* .editormd-theme-dark input[type="number"] {
-  -webkit-appearance: textfield;
-     -moz-appearance: textfield;
-          appearance: textfield;
-}
-
-.editormd-theme-dark input[type=number]::-webkit-inner-spin-button,
-.editormd-theme-dark input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-} */
-
-.editormd-theme-dark .editormd-tab-head {
-  border-bottom: 1px solid #444444;
-}
-
-.editormd-theme-dark .editormd-tab-box {
-  padding-top: 20px;
-  padding-bottom: 0;
-}
-
-.editormd-theme-dark .editormd-grid-table {
-  border: none;
-}
-
-.editormd-theme-dark .editormd-tab-head li a {
-  color: #8D8D8D;
-  background: #393939;
-  border: none;
-  border-bottom: 1px solid #444444;
-}
-  .editormd-theme-dark .editormd-tab-head li a:hover {
-    color: #F4F4F4;
-    background: #525151;
-  }
-
-  .editormd-theme-dark .editormd-tab-head li.active a {
-    color: #F4F4F4;
-    background: #525151;
-    border-bottom-color: #444444;
-  }
-
-.editormd-theme-dark .editormd-grid-table-row a {
-  border: none;
-}
-
-  .editormd-theme-dark .editormd-grid-table-row a:hover {
-    color: #CCCCCC;
-    background-color: #393939;
-  }
-
-.editormd-theme-dark .editormd-form input[type="textarea"],
-.editormd-theme-dark .editormd-form textarea {
-  color: #8D8D8D;
-  background: #2C2C2C;
-  border: 1px solid #8D8D8D;
-  border-radius: 3px;
-  padding: 8px;
-}
-
-.editormd-theme-dark .CodeMirror-activeline-background {
-  background: rgba(50, 121, 198, 0.26);
-}
-
-.editormd-theme-dark .CodeMirror pre.CodeMirror-placeholder {
-  color: #A0A6AC;
-}
-
-.editormd-theme-dark .editormd-code-toolbar {
-  color: #F4F4F4;
-}
-
-.editormd-theme-dark .editormd-dialog-container select {
-  padding: 6px 8px;
-  width: 220px;
-  color: #FFFFFF;
-  border-color: #8D8D8D;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background: #2C2C2C;
-  background-image: url("../images/chevron-down.svg");
-  background-size: 20px 15px;
-  background-repeat: no-repeat;
-  background-position-x: calc(100% - 3px);
-  background-position-y: 9px;
-}
-
-.editormd-theme-dark .editormd-dialog-container select option {
-  font-size: inherit;
-  background: #2C2C2C;
-  color: #CCC;
-}
-
-.editormd-theme-dark .editormd-dialog-container .markdown-body {
-  color: #F4F4F4;
-  border: none;
-}
-
-/* Skills Network */
-@font-face {
-  font-family: 'IBM Plex Sans';
-  src: url('../fonts/IBM_Plex_Sans/IBMPlexSans-Regular.ttf') format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'IBM Plex Sans';
-  src: url('../fonts/IBM_Plex_Sans/IBMPlexSans-Medium.ttf') format("truetype");
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'IBM Plex Sans';
-  src: url('../fonts/IBM_Plex_Sans/IBMPlexSans-SemiBold.ttf') format("truetype");
-  font-weight: 600;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Inter';
-  src: url('../fonts/Inter/static/Inter-Regular.ttf') format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Consolas';
-  src: url('../fonts/Consolas-Font/CONSOLA.TTF') format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
-img.sn-logo {
-  height: 35px;
-  margin-right: 2px;
-  width: 35px;
-  content:url(../images/IBM/SN_grayscale_darkmode_tree.svg);
-}
-
-span.home-title {
-  pointer-events: none;
-  overflow: hidden;
-  white-space: nowrap;
-  color: #FFFFFF;
-  line-height: 100%;
-}
-
-.editormd-titlebar-section .status-text {
-  position: absolute;
-  left: 100%;
-  white-space: nowrap;
-  margin-left: 10px;
-}
-
-.editormd-dialog-container .dialog-warning {
-  display: flex;
-  gap: 0 12px;
-  color: #8D8D8D;
-  margin-top: 10px;
-  align-items: center;
-}
-
-.editormd-dialog-container .dialog-warning > span.warning-sign {
-  height: 15px;
-  width: 15px;
-  background: #8D8D8D;
-  mask-position: center;
-  -webkit-mask-position: center;
-  mask-repeat: no-repeat;
-  -webkit-mask-repeat: no-repeat;
-  mask-size: 100% 100%;
-  -webkit-mask-size: 100% 100%;
-  mask-image: url(../images/warning.svg);
-  -webkit-mask-image: url(../images/warning.svg);
-  display: inline-block;
-}
-
-/* Toolbar Dropdown */
-div.toolbar-dropdown-content {
-  display: none;
-  position: absolute;
-  z-index: 11;
-  background-color: #1C1E1F;
-  width: max-content;
-  max-width: 250px;
-  color: #CCCCCC8A;
-  box-shadow: 0px 6.681033611297607px 6.681033611297607px 0px #00000080;
-  border-radius: 4px;
-}
-
-.editormd-menu > li.dropdown:hover div.toolbar-dropdown-content,
-.editormd-titlebar-dropdown:hover > div.toolbar-dropdown-content {
-  display: block;
-}
-
-div.toolbar-dropdown-content > a {
-  color: #CCCCCC;
-  padding: 8px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-div.toolbar-dropdown-content > a:first-of-type {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-}
-
-div.toolbar-dropdown-content > a:last-of-type {
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-}
-
-div.toolbar-dropdown-content > a:hover {
-  background-color: #393939;
-}
-
-div.toolbar-dropdown-content > a > i.fa > span.icon-text {
-  font-family: Inter;
-  font-size: 0.85rem;
 }

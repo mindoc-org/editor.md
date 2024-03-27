@@ -7,7 +7,7 @@
  * @license     MIT License
  * @author      IBM Skills Network
  * {@link       https://github.com/ibm-skills-network/editor.md}
- * @updateTime  2023-05-12
+ * @updateTime  2024-03-27
  */
 
 ;(function(factory) {

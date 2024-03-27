@@ -19,6 +19,14 @@
 
 3. Package should be updated [here](https://github.com/orgs/ibm-skills-network/packages).
 
+## build and jsdoc generate
+```bash
+pnpm install
+npx gulp default
+# jsdoc generate
+npx gulp jsdoc
+```
+
 
 ### Features
 

@@ -14,3 +14,4 @@ examples/uploads/**/*
 .url
 css/*.map
 .npmrc
+docs/jsdoc/

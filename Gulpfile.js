@@ -2,17 +2,17 @@
 
 var os           = require("os");
 var gulp         = require("gulp");
-var gutil        = require("gulp-util");
-var sass         = require("gulp-ruby-sass");
+var fancy_log    = require('fancy-log');
+var ansi_colors  = require('ansi-colors');
+var sass         = require('gulp-sass')(require('sass'));
 var jshint       = require("gulp-jshint");
-var uglify       = require("gulp-uglifyjs");
+var uglify       = require("gulp-uglify");
 var rename       = require("gulp-rename");
 var concat       = require("gulp-concat");
 var notify       = require("gulp-notify");
 var header       = require("gulp-header");
-var minifycss    = require("gulp-minify-css");
-//var jsdoc        = require("gulp-jsdoc");
-//var jsdoc2md     = require("gulp-jsdoc-to-markdown");
+var cleanCSS     = require('gulp-clean-css')
+var jsdoc        = require("gulp-jsdoc3");
 var pkg          = require("./package.json");
 var dateFormat   = require("dateformatter").format;
 var replace      = require("gulp-replace");
@@ -20,28 +20,30 @@ var replace      = require("gulp-replace");
 pkg.name         = "Editor.md";
 pkg.today        = dateFormat;
 
-var headerComment = ["/*", 
-					" * <%= pkg.name %>",
-                    " *",
-					" * @file        <%= fileName(file) %> ",
-					" * @version     v<%= pkg.version %> ",
-					" * @description <%= pkg.description %>",
-					" * @license     MIT License",
-					" * @author      <%= pkg.author %>",
-					" * {@link       <%= pkg.homepage %>}",
-					" * @updateTime  <%= pkg.today('Y-m-d') %>",
-					" */", 
-					"\r\n"].join("\r\n");
+var headerComment = [
+    "/*", 
+    " * <%= pkg.name %>",
+    " *",
+    " * @file        <%= fileName(file) %> ",
+    " * @version     v<%= pkg.version %> ",
+    " * @description <%= pkg.description %>",
+    " * @license     MIT License",
+    " * @author      <%= pkg.author %>",
+    " * {@link       <%= pkg.homepage %>}",
+    " * @updateTime  <%= pkg.today('Y-m-d') %>",
+    " */", 
+    "\r\n"
+].join("\r\n");
 
 var headerMiniComment = "/*! <%= pkg.name %> v<%= pkg.version %> | <%= fileName(file) %> | <%= pkg.description %> | MIT License | By: <%= pkg.author %> | <%= pkg.homepage %> | <%=pkg.today('Y-m-d') %> */\r\n";
 
-var scssTask = function(fileName, path) {
+function scssTask(fileName, path) {
     
     path = path || "scss/";
     
     var distPath = "css";
-    
-    return sass(path + fileName + ".scss", { style: "expanded", sourcemap: false, noCache : true })
+    return gulp.src(path + fileName + ".scss")
+        .pipe(sass({outputStyle: 'expanded', sourceMap: false}).on('error', sass.logError))
         .pipe(gulp.dest(distPath))
         .pipe(header(headerComment, {pkg : pkg, fileName : function(file) { 
             var name = file.path.split(file.base);
@@ -50,7 +52,7 @@ var scssTask = function(fileName, path) {
        .pipe(gulp.dest(distPath)) 
        .pipe(rename({ suffix: ".min" }))
        .pipe(gulp.dest(distPath))
-       .pipe(minifycss())
+       .pipe(cleanCSS({compatibility: 'ie8'}))
        .pipe(gulp.dest(distPath)) 
         .pipe(header(headerMiniComment, {pkg : pkg, fileName : function(file) { 
             var name = file.path.split(file.base);
@@ -58,41 +60,44 @@ var scssTask = function(fileName, path) {
         }}))
        .pipe(gulp.dest(distPath)) 
        .pipe(notify({ message: fileName + ".scss task completed!" }));
-};
+}
 
-gulp.task("scss", function() { 
+function task_scss() { 
 	return scssTask("editormd");
-}); 
+}
 
-gulp.task("scss2", function() { 
+function task_scss2() { 
 	return scssTask("editormd.preview");
-}); 
+}
 
-gulp.task("scss3", function() {
+function task_scss3() {
 	return scssTask("editormd.logo");
-}); 
+}
 
-gulp.task("js", function() { 
-  return gulp.src("./src/editormd.js")
-            .pipe(jshint("./.jshintrc"))
-            .pipe(jshint.reporter("default"))
-            .pipe(header(headerComment, {pkg : pkg, fileName : function(file) { 
-                var name = file.path.split(file.base);
-                return name[1].replace(/[\\\/]?/, "");
-            }}))
-            .pipe(gulp.dest("./"))
-            .pipe(rename({ suffix: ".min" }))
-            .pipe(uglify())  // {outSourceMap: true, sourceRoot: './'}
-            .pipe(gulp.dest("./"))	
-            .pipe(header(headerMiniComment, {pkg : pkg, fileName : function(file) {
-                var name = file.path.split(file.base + ( (os.platform() === "win32") ? "\\" : "/") );
-                return name[1].replace(/[\\\/]?/, "");
-            }}))
-            .pipe(gulp.dest("./"))
-            .pipe(notify({ message: "editormd.js task complete" }));
-}); 
+function task_js() { 
+    return gulp.src("./src/editormd.js")
+        .on("error", function(err){
+            fancy_log(ansi_colors.red("js failed") + os.EOL + err.message);
+        })
+        .pipe(jshint("./.jshintrc"))
+        .pipe(jshint.reporter("default"))
+        .pipe(header(headerComment, {pkg : pkg, fileName : function(file) { 
+            var name = file.path.split(file.base);
+            return name[1].replace(/[\\\/]?/, "");
+        }}))
+        .pipe(gulp.dest("./"))
+        .pipe(rename({ suffix: ".min" }))
+        .pipe(uglify().on('error', fancy_log))  // {outSourceMap: true, sourceRoot: './'}
+        .pipe(gulp.dest("./"))	
+        .pipe(header(headerMiniComment, {pkg : pkg, fileName : function(file) {
+            var name = file.path.split(file.base + ( (os.platform() === "win32") ? "\\" : "/") );
+            return name[1].replace(/[\\\/]?/, "");
+        }}))
+        .pipe(gulp.dest("./"))
+        .pipe(notify({ message: "editormd.js task complete" }));
+}
 
-gulp.task("amd", async function() {
+function task_amd() {
     var replaceText1 = [
         'var cmModePath  = "codemirror/mode/";',
         '            var cmAddonPath = "codemirror/addon/";', 
@@ -171,7 +176,7 @@ gulp.task("amd", async function() {
         "   }"
     ].join("\r\n");
     
-    gulp.src("src/editormd.js")
+    return gulp.src("src/editormd.js")
         .pipe(rename({ suffix: ".amd" }))
         .pipe(gulp.dest('./'))
         .pipe(header(headerComment, {pkg : pkg, fileName : function(file) { 
@@ -192,8 +197,7 @@ gulp.task("amd", async function() {
         }}))
         .pipe(gulp.dest("./"))
         .pipe(notify({ message: "amd version task complete"}));
-}); 
-
+}
 
 var codeMirror = {
     path : {
@@ -260,7 +264,7 @@ var codeMirror = {
     ]
 };
 
-gulp.task("cm-mode", function() { 
+function task_cm_mode() { 
     
     var modes = [
         codeMirror.path.src.mode + "/meta.js"
@@ -282,9 +286,9 @@ gulp.task("cm-mode", function() {
                 }}))
                 .pipe(gulp.dest(codeMirror.path.dist))
                 .pipe(notify({ message: "codemirror-mode task complete!" }));
-}); 
+}
 
-gulp.task("cm-addon", function() { 
+function task_cm_addon() { 
     
     var addons = [];
     
@@ -304,13 +308,13 @@ gulp.task("cm-addon", function() {
                 }}))
                 .pipe(gulp.dest(codeMirror.path.dist))
                 .pipe(notify({ message: "codemirror-addon.js task complete" }));
-}); 
+}
 
-gulp.task("cm-lib-css", function() { 
+function task_cm_lib_css() { 
     return gulp.src('lib/codemirror/lib/codemirror.css')
                 .pipe(concat("codemirror.min.css"))
                 .pipe(gulp.dest(codeMirror.path.dist))
-                .pipe(minifycss()) //{outSourceMap: true, sourceRoot: codeMirror.path.dist}
+                .pipe(cleanCSS({compatibility: 'ie8'})) //{outSourceMap: true, sourceRoot: codeMirror.path.dist}
                 .pipe(gulp.dest(codeMirror.path.dist))	
                 .pipe(header(headerMiniComment, {pkg : pkg, fileName : function(file) {
                     var name = file.path.split(file.base + "\\");
@@ -318,9 +322,9 @@ gulp.task("cm-lib-css", function() {
                 }}))
                 .pipe(gulp.dest(codeMirror.path.dist))
                 .pipe(notify({ message: "codemirror-css task complete" }));
-});
+}
 
-gulp.task("cm-lib-js", function() { 
+function task_cm_lib_js() { 
     return gulp.src('lib/codemirror/lib/codemirror.js')
                 .pipe(concat("codemirror.min.js"))
                 .pipe(gulp.dest(codeMirror.path.dist))
@@ -332,40 +336,36 @@ gulp.task("cm-lib-js", function() {
                 }}))
                 .pipe(gulp.dest(codeMirror.path.dist))
                 .pipe(notify({ message: "codemirror-js task complete" }));
-});
+}
 
-/*
-gulp.task("jsdoc", function(){
-    return gulp.src(["./src/editormd.js", "README.md"])
-               .pipe(jsdoc.parser())
-               .pipe(jsdoc.generator("./docs/html"));
-});
+function task_jsdoc() {
+    var config = {
+        opts: {
+            destination: "docs/jsdoc"
+        }
+    }
+    return gulp.src(["src/editormd.js", "README.md"])
+        .pipe(jsdoc(config))
+        .pipe(gulp.dest("docs/jsdoc"));
+}
 
-gulp.task("jsdoc2md", function() {
-    return gulp.src("src/js/editormd.js")
-            .pipe(jsdoc2md())
-            .on("error", function(err){
-                gutil.log(gutil.colors.red("jsdoc2md failed"), err.message);
-            })
-            .pipe(rename(function(path) {
-                path.extname = ".md";
-            }))
-            .pipe(gulp.dest("docs/markdown"));
-});
-*/
-gulp.task("watch", function() {
-	gulp.watch("scss/editormd.scss", ["scss"]);
-	gulp.watch("scss/editormd.preview.scss", ["scss", "scss2"]);
-	gulp.watch("scss/editormd.logo.scss", ["scss", "scss3"]);
-	gulp.watch("src/editormd.js", ["js", "amd"]);
-});
+exports.watch = function() {
+    gulp.watch("scss/editormd.scss", task_scss);
+    gulp.watch("scss/editormd.preview.scss", gulp.series(task_scss, task_scss2));
+    gulp.watch("scss/editormd.logo.scss", gulp.series(task_scss, task_scss3));
+    gulp.watch("src/editormd.js", gulp.series(task_js, task_amd));
+};
 
-gulp.task("default", function() {
-    gulp.run("scss");
-    gulp.run("scss2");
-    gulp.run("scss3");
-    gulp.run("js");
-    gulp.run("amd");
-    gulp.run("cm-addon");
-    gulp.run("cm-mode");
-});
+exports.default = gulp.series(
+    task_scss,
+    task_scss2,
+    task_scss3,
+    task_js,
+    task_amd,
+    task_cm_lib_css,
+    task_cm_lib_js,
+    task_cm_mode,
+    task_cm_addon
+);
+
+exports.jsdoc = gulp.series(task_jsdoc)
