@@ -4097,11 +4097,12 @@
         }
     };
 
-    // 使用国外的CDN，加载速度有时会很慢，或者自定义URL
+    // 使用国内的CDN，或者自定义URL
     // You can custom KaTeX load url.
     editormd.katexURL  = {
-        css : "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.6/katex.min",
-        js  : "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.15.6/katex.min"
+        css: "https://cdn.bootcdn.net/ajax/libs/KaTeX/0.16.8/katex.min",
+        jsmain: "https://cdn.bootcdn.net/ajax/libs/KaTeX/0.16.8/katex.min",
+        jsauto: "https://cdn.bootcdn.net/ajax/libs/KaTeX/0.16.8/contrib/auto-render.min"
     };
 
     editormd.kaTeXLoaded = false;
@@ -4115,7 +4116,9 @@
 
     editormd.loadKaTeX = function (callback) {
         editormd.loadCSS(editormd.katexURL.css, function(){
-            editormd.loadScript(editormd.katexURL.js, callback || function(){});
+            editormd.loadScript(editormd.katexURL.jsmain, function() {
+                editormd.loadScript(editormd.katexURL.jsauto, callback || function() {})
+            })
         });
     };
 
