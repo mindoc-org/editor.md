@@ -7,6 +7,18 @@
  * @license     MIT License
  * @author      IBM Skills Network
  * {@link       https://github.com/ibm-skills-network/editor.md}
+ * @updateTime  2026-03-31
+ */
+
+/*
+ * Editor.md
+ *
+ * @file        editormd.js 
+ * @version     v1.7.17 
+ * @description Open source online markdown editor.
+ * @license     MIT License
+ * @author      IBM Skills Network
+ * {@link       https://github.com/ibm-skills-network/editor.md}
  * @updateTime  2024-03-27
  */
 
@@ -69,9 +81,9 @@
             "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
             "h1", "h2", "h3", "h4", "h5", "h6", "|",
             "list-ul", "list-ol", "hr", "|",
-            "link", "code", "preformatted-text", "code-block", "table", "datetime", "emoji", "html-entities", "pagebreak", "|",
+            "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "emoji", "html-entities", "pagebreak", "|",
             "goto-line", "watch", "preview", "fullscreen", "clear", "search", "|",
-            "help", "info"
+            "help", "changetheme", "info"
         ],
         simple : [
             "undo", "redo", "|",
@@ -79,16 +91,17 @@
             "h1", "h2", "h3", "h4", "h5", "h6", "|",
             "list-ul", "list-ol", "hr", "|",
             "watch", "preview", "fullscreen", "|",
-            "help", "info"
+            "help", "changetheme", "info"
         ],
         mini : [
             "undo", "redo", "|",
             "watch", "preview", "|",
-            "help", "info"
+            "help", "changetheme", "info"
         ]
     };
 
     editormd.defaults     = {
+        debug                : false,
         mode                 : "gfm",          //gfm or markdown
         name                 : "",             // Form element name
         value                : "",             // value for CodeMirror, if mode not gfm/markdown
@@ -148,6 +161,9 @@
         onscroll             : function() {},
         onpreviewscroll      : function() {},
 
+        imageUpload          : false,
+        imageFormats         : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+        imageUploadURL       : "",
         crossDomainUpload    : false,
         uploadCallbackURL    : "",
 
@@ -158,7 +174,7 @@
         tocContainer         : "",
         tocStartLevel        : 1,              // Said from H1 to create ToC
         htmlDecode           : false,          // Open the HTML tag identification
-        pageBreak            : false,           // Enable parse page break [========]
+        pageBreak            : true,           // Enable parse page break [========]
         atLink               : true,           // for @link
         emailLink            : true,           // for email address auto link
         taskList             : false,          // Enable Github Flavored Markdown task lists
@@ -168,6 +184,8 @@
         tex                  : false,          // TeX(LaTeX), based on KaTeX
         flowChart            : false,          // flowChart.js only support IE9+
         sequenceDiagram      : false,          // sequenceDiagram.js only support IE9+
+        mermaid              : true,
+        mindMap              : true,           // 脑图
         previewCodeHighlight : true,
 
         toolbar              : true,           // show/hide toolbar
@@ -211,6 +229,8 @@
             "list-ol"        : "fa-list-ol",
             hr               : "fa-minus",
             link             : "fa-link",
+            "reference-link" : "fa-anchor",
+            image            : "fa-picture-o",
             code             : "fa-code",
             "preformatted-text" : "fa-file-code-o",
             "code-block"     : "fa-file-code-o",
@@ -227,6 +247,7 @@
             fullscreen       : "fa-arrows-alt",
             clear            : "fa-eraser",
             help             : "fa-question-circle",
+            changetheme      : "fa-info-circle",
             info             : "fa-info-circle"
         },
         toolbarIconTexts     : {
@@ -242,7 +263,106 @@
         },
 
         // Support for other languaages (see README)
-        lang : {}
+        lang : {
+            name        : "zh-cn",
+            description : "开源在线Markdown编辑器<br/>Open source online Markdown editor.",
+            tocTitle    : "目录",
+            toolbar     : {
+                undo             : "撤销（Ctrl+Z）",
+                redo             : "重做（Ctrl+Y）",
+                bold             : "粗体",
+                del              : "删除线",
+                italic           : "斜体",
+                quote            : "引用",
+                ucwords          : "将每个单词首字母转成大写",
+                uppercase        : "将所选转换成大写",
+                lowercase        : "将所选转换成小写",
+                h1               : "标题1",
+                h2               : "标题2",
+                h3               : "标题3",
+                h4               : "标题4",
+                h5               : "标题5",
+                h6               : "标题6",
+                "list-ul"        : "无序列表",
+                "list-ol"        : "有序列表",
+                hr               : "横线",
+                link             : "链接",
+                "reference-link" : "引用链接",
+                image            : "添加图片",
+                code             : "行内代码",
+                "preformatted-text" : "预格式文本 / 代码块（缩进风格）",
+                "code-block"     : "代码块（多语言风格）",
+                table            : "添加表格",
+                datetime         : "日期时间",
+                emoji            : "Emoji表情",
+                "html-entities"  : "HTML实体字符",
+                pagebreak        : "插入分页符",
+                "goto-line"      : "跳转到行",
+                watch            : "关闭实时预览",
+                unwatch          : "开启实时预览",
+                preview          : "全窗口预览HTML（按 Shift + ESC还原）",
+                fullscreen       : "全屏（按ESC还原）",
+                clear            : "清空",
+                search           : "搜索",
+                help             : "使用帮助",
+                changetheme      : "切换编辑主题",
+                info             : "关于" + editormd.title
+            },
+            buttons : {
+                enter  : "确定",
+                cancel : "取消",
+                close  : "关闭"
+            },
+            dialog : {
+                link : {
+                    title    : "添加链接",
+                    url      : "链接地址",
+                    urlTitle : "链接标题",
+                    urlEmpty : "错误：请填写链接地址。"
+                },
+                referenceLink : {
+                    title    : "添加引用链接",
+                    name     : "引用名称",
+                    url      : "链接地址",
+                    urlId    : "链接ID",
+                    urlTitle : "链接标题",
+                    nameEmpty: "错误：引用链接的名称不能为空。",
+                    idEmpty  : "错误：请填写引用链接的ID。",
+                    urlEmpty : "错误：请填写引用链接的URL地址。"
+                },
+                image : {
+                    title    : "添加图片",
+                    url      : "图片地址",
+                    link     : "图片链接",
+                    alt      : "图片描述",
+                    uploadButton     : "本地上传",
+                    imageURLEmpty    : "错误：图片地址不能为空。",
+                    uploadFileEmpty  : "错误：上传的图片不能为空。",
+                    formatNotAllowed : "错误：只允许上传图片文件，允许上传的图片文件格式有："
+                },
+                preformattedText : {
+                    title             : "添加预格式文本或代码块",
+                    emptyAlert        : "错误：请填写预格式文本或代码的内容。"
+                },
+                codeBlock : {
+                    title             : "添加代码块",
+                    selectLabel       : "代码语言：",
+                    selectDefaultText : "请选择代码语言",
+                    otherLanguage     : "其他语言",
+                    unselectedLanguageAlert : "错误：请选择代码所属的语言类型。",
+                    codeEmptyAlert    : "错误：请填写代码内容。"
+                },
+                htmlEntities : {
+                    title : "HTML 实体字符"
+                },
+                help : {
+                    title : "使用帮助"
+                },
+                changetheme : {
+                    title : "切换编辑主题"
+                },
+            }
+        }
     };
 
     editormd.classNames  = {
@@ -284,6 +404,13 @@
             if (typeof id === "object")
             {
                 options = id;
+            }
+
+            // Backward compatibility: if called with 2 args (id, options), treat 2nd arg as options
+            if (typeof author_ide_version === "object" && !Array.isArray(author_ide_version) && Object.keys(options).length === 0)
+            {
+                options = author_ide_version;
+                author_ide_version = undefined;
             }
 
             var classPrefix      = this.classPrefix  = editormd.classPrefix;
@@ -416,9 +543,10 @@
          */
 
         loadQueues : function() {
-            var _this        = this;
-            var settings     = this.settings;
-            var loadPath     = settings.path;
+            var _this           = this;
+            var settings        = this.settings;
+            var loadPath        = settings.path;
+            var isLoadedDisplay = false;
 
             var loadFlowChartOrSequenceDiagram = function() {
 
@@ -508,9 +636,16 @@
 
                             editormd.$marked = marked;
 
+                            if(!settings.highlightStyle){
+                                settings.highlightStyle = "github";
+                            }
                             if (settings.previewCodeHighlight)
                             {
-                                editormd.loadScript(loadPath + "prettify.min", function() {
+                                // editormd.loadScript(loadPath + "prettify.min", function() {
+                                //     loadFlowChartOrSequenceDiagram();
+                                // });
+                                editormd.loadCSS(loadPath + "highlight/styles/" + settings.highlightStyle);
+                                editormd.loadScript(loadPath + "highlight/highlight", function() {
                                     loadFlowChartOrSequenceDiagram();
                                 });
                             }
@@ -740,6 +875,7 @@
             }
 
             var cm       = this.cm;
+            var editor   = this.editor;
             var count    = cm.lineCount();
             var preview  = this.preview;
 
@@ -1024,9 +1160,10 @@
         },
 
         /**
-         * Set toolbar and initialization
+         * 配置和初始化工具栏
+         * Set toolbar and Initialization
          *
-         * @returns {editormd}
+         * @returns {editormd}  返回editormd的实例对象
          */
 
         setToolbar : function() {
@@ -1037,6 +1174,7 @@
             }
 
             var editor        = this.editor;
+            var preview       = this.preview;
             var classPrefix   = this.classPrefix; // this.classPrefix = "editormd-"
             var titlebarModes = (typeof settings.titlebar === "function") ? settings.titlebar() : settings.titlebar;
 
@@ -1069,16 +1207,16 @@
             // for each titlebar section
             Object.entries(titlebarModes).forEach(([titlebarSection, sectionButtons]) => {
 
-                let sectionHtml = "";
+                var sectionHtml = "";
 
                 if (titlebarSection === "left") {
                     // set logo and Author IDE title
                     sectionHtml = "<img class=\"sn-logo\"><span class=\"home-title\">Skills Network Author IDE</span>";
                 } else {
                     // for each item in the section, add HTML to sectionHTML
-                    for (let name in sectionButtons) {
-                        let htmlSafeName = name.replace(/\s+/g, '-').toLowerCase();
-                        let hoverTitle = (typeof settings.lang.titlebar[name] === "string") ? settings.lang.titlebar[name] : "";
+                    for (var name in sectionButtons) {
+                        var htmlSafeName = name.replace(/\s+/g, '-').toLowerCase();
+                        var hoverTitle = (typeof settings.lang.titlebar[name] === "string") ? settings.lang.titlebar[name] : "";
 
                         switch (sectionButtons[name]) {
                             case "dropdown":
@@ -1148,13 +1286,13 @@
                     var menuItem = (menuClasses.length > 0) ? "<li class=\"" + menuClasses.join(" ") + "\">" : "<li>";
 
                     // list of icons in menu item (usually just one unless dropdown)
-                    let selections = []
+                    var selections = []
 
                     if (isDropdown) {
-                        let info = name.split(":");
+                        var info = name.split(":");
                         var dropdownType = info[0]; // "dropdown", "dropdownIcon"
                         name = info[1]; // set name to actual parsed name from info
-                        let dropdownContent = info[2].split(",");
+                        var dropdownContent = info[2].split(",");
                         selections = [name].concat(dropdownContent);
                         // set isDropdown to false if no dropdown content
                         if (!dropdownContent.length) {
@@ -1164,7 +1302,7 @@
                         selections.push(name)
                     }
 
-                    for (let j = 0, len = selections.length; j < len; j++) {
+                    for (var j = 0, len = selections.length; j < len; j++) {
                         name = selections[j].trim();
 
                         // insert dropdown opening tag
@@ -1173,17 +1311,17 @@
                         }
 
                         // default "dropdown" has no icons in content, use "dropdownIcon" for icon+text options
-                        let hasIcon = !(isDropdown && dropdownType !== "dropdownIcon" && menuItem.includes("toolbar-dropdown-content"));
-                        let isHeader = (/h(\d)/.test(name));
-                        let index    = name;
+                        var hasIcon = !(isDropdown && dropdownType !== "dropdownIcon" && menuItem.includes("toolbar-dropdown-content"));
+                        var isHeader = (/h(\d)/.test(name));
+                        var index    = name;
 
                         if (name === "watch" && !settings.watch) {
                             index = "unwatch";
                         }
 
-                        let title     = settings.lang.toolbar[index]; // hover text
-                        let iconTexts = settings.toolbarIconTexts[index]; // placeholder text if icon is empty
-                        let iconClass = settings.toolbarIconsClass[index]; // font awesome icon class
+                        var title     = settings.lang.toolbar[index]; // hover text
+                        var iconTexts = settings.toolbarIconTexts[index]; // placeholder text if icon is empty
+                        var iconClass = settings.toolbarIconsClass[index]; // font awesome icon class
 
                         title     = (typeof title     === "undefined" || isDropdown) ? "" : title;
                         iconTexts = (typeof iconTexts === "undefined") ? "" : iconTexts;
@@ -1272,6 +1410,7 @@
         },
 
         /**
+         * 工具栏图标事件处理器
          * Bind toolbar icons to their event handlers
          *
          * @returns {editormd}  返回editormd的实例对象
@@ -1316,7 +1455,7 @@
                     }
                 }
 
-                if (name !== "link" && name !== "code-block" &&
+                if (name !== "link" && name !== "reference-link" && name !== "image" && name !== "code-block" &&
                     name !== "preformatted-text" && name !== "watch" && name !== "preview" && name !== "search" && name !== "fullscreen" && name !== "info")
                 {
                     cm.focus();
@@ -1415,6 +1554,7 @@
 
             $("html,body").css("overflow-x", "hidden");
 
+            var _this       = this;
             var editor      = this.editor;
             var settings    = this.settings;
 			var infoDialog  = this.infoDialog = editor.children("." + this.classPrefix + "dialog-info");
@@ -1477,6 +1617,7 @@
          */
 
         recreate : function() {
+            var _this            = this;
             var editor           = this.editor;
             var settings         = this.settings;
 
@@ -1521,6 +1662,9 @@
                 {
                     prettyPrint($.proxy(settings.fixCodeBlocks,this));
                 }
+                previewContainer.find("pre").each(function (i, block) {
+                    hljs.highlightBlock(block);
+                });
             }
 
             return this;
@@ -1562,6 +1706,22 @@
             return this;
         },
 
+
+        /**
+         * 解析思维导图 - 2020-04-12
+         *
+         * @returns {editormd}             返回editormd的实例对象
+         */
+        mindmapRender:function(){
+            this.previewContainer.find(".mindmap").each(function(){
+                var mmap  = $(this);
+                var md_data = window.markmap.transform(mmap.text().trim());
+                window.markmap.markmap("svg#"+this.id,md_data)
+            });
+
+            return this;
+        },
+
         /**
          * 解析和渲染流程图及时序图
          * FlowChart and SequenceDiagram Renderer
@@ -1577,17 +1737,34 @@
             if (editormd.isIE8) {
                 return this;
             }
+            if (settings.mermaid) {
+                var mermaid = previewContainer.find(".lang-mermaid");
+                if (mermaid) {
+                    try {
+                        window.mermaid.init(void 0, mermaid.removeClass("hide"));
+                    }catch (e) {
+                        console.log(e);
+                    }
+                }
+            }
 
             if (settings.flowChart) {
                 if (flowchartTimer === null) {
                     return this;
                 }
-
-                previewContainer.find(".flowchart").flowChart();
+                try {
+                    previewContainer.find(".flowchart").flowChart();
+                }catch (e) {
+                    console.log(e);
+                }
             }
 
             if (settings.sequenceDiagram) {
-                previewContainer.find(".sequence-diagram").sequenceDiagram({theme: "simple"});
+                try {
+                    previewContainer.find(".sequence-diagram").sequenceDiagram({theme: "simple"});
+                }catch (e) {
+                    console.log(e);
+                }
             }
 
             var preview    = $this.preview;
@@ -1683,15 +1860,18 @@
                         {
                             case 120:
                                     $.proxy(toolbarHandlers["watch"], _this)();
-                                return false;
+                                    return false;
+                                break;
 
                             case 121:
                                     $.proxy(toolbarHandlers["preview"], _this)();
-                                return false;
+                                    return false;
+                                    break;
 
                             case 122:
                                     $.proxy(toolbarHandlers["fullscreen"], _this)();
-                                 return false;
+                                    return false;
+                                    break;
 
                             default:
                                 break;
@@ -1712,6 +1892,7 @@
         bindScrollEvent : function() {
 
             var _this            = this;
+            // var preview          = this.preview;
             var preview          = this.previewContainer;
             var settings         = this.settings;
             var codeMirror       = this.codeMirror;
@@ -1724,26 +1905,91 @@
             var cmBindScroll = function() {
                 codeMirror.find(".CodeMirror-scroll").bind(mouseOrTouch("scroll", "touchmove"), function(event) {
                     if (timer == null){
+                        var height    = $(this).height();
+                        var scrollTop = $(this).scrollTop();
+                        var percent   = (scrollTop / $(this)[0].scrollHeight);
+
+                        var tocHeight = 0;
+
+                        preview.find(".markdown-toc-list").each(function(){
+                            tocHeight += $(this).height();
+                        });
+
+                        var tocMenuHeight = preview.find(".editormd-toc-menu").height();
+                        tocMenuHeight = (!tocMenuHeight) ? 0 : tocMenuHeight;
+
+                        if (scrollTop === 0)
+                        {
+                            preview.scrollTop(0);
+                        }
+                        else if (scrollTop + height >= $(this)[0].scrollHeight - 16)
+                        {
+                            preview.scrollTop(preview[0].scrollHeight);
+                        }
+                        else
+                        {
+                            preview.scrollTop((preview[0].scrollHeight  + tocHeight + tocMenuHeight) * percent);
+                        }
+
                         $.proxy(settings.onscroll, _this)(event);
                     }
                 });
             };
 
+            var cmUnbindScroll = function() {
+                codeMirror.find(".CodeMirror-scroll").unbind(mouseOrTouch("scroll", "touchmove"));
+            };
+
             var previewBindScroll = function() {
+
                 preview.bind(mouseOrTouch("scroll", "touchmove"), function(event) {
                     if (timer == null){
+                        var height    = $(this).height();
+                        var scrollTop = $(this).scrollTop();
+                        var percent   = (scrollTop / $(this)[0].scrollHeight);
+                        var codeView  = codeMirror.find(".CodeMirror-scroll");
+
+                        if(scrollTop === 0)
+                        {
+                            codeView.scrollTop(0);
+                        }
+                        else if (scrollTop + height >= $(this)[0].scrollHeight)
+                        {
+                            codeView.scrollTop(codeView[0].scrollHeight);
+                        }
+                        else
+                        {
+                            codeView.scrollTop(codeView[0].scrollHeight * percent);
+                        }
                         $.proxy(settings.onpreviewscroll, _this)(event);
                     }
                 });
 
             };
+            var previewUnbindScroll = function() {
+                preview.unbind(mouseOrTouch("scroll", "touchmove"));
+            };
+
+			codeMirror.bind({
+				mouseover  : cmBindScroll,
+				mouseout   : cmUnbindScroll,
+				touchstart : cmBindScroll,
+				touchend   : cmUnbindScroll
+			});
 
             if (settings.syncScrolling === "single") {
-                cmBindScroll();
+                // cmBindScroll();
                 return this;
             }
 
-            previewBindScroll();
+            // previewBindScroll();
+            preview.bind({
+				mouseover  : previewBindScroll,
+				mouseout   : previewUnbindScroll,
+				touchstart : previewBindScroll,
+				touchend   : previewUnbindScroll
+			});
+
             return this;
         },
 
@@ -1793,6 +2039,12 @@
             var settings         = this.settings;
 
             this.containerMask.hide();
+
+            this.save();
+
+            if (settings.watch) {
+                preview.show();
+            }
 
             editor.data("oldWidth", editor.width()).data("oldHeight", editor.height()); // 为了兼容Zepto
 
@@ -1935,6 +2187,7 @@
             else
             {
                 codeMirror.width(editor.width());
+                preview.hide();
             }
 
             if (state.loaded)
@@ -1992,6 +2245,8 @@
                     flowChart            : settings.flowChart,
                     sequenceDiagram      : settings.sequenceDiagram,
                     previewCodeHighlight : settings.previewCodeHighlight,
+                    mermaid              : settings.mermaid,
+                    mindMap              : settings.mindMap, // 思维导图
                 };
 
                 var markedOptions = this.markedOptions = {
@@ -2009,14 +2264,16 @@
 
                 var newMarkdownDoc = editormd.$marked.parse(cmValue, markedOptions);
 
-                //console.info("cmValue", cmValue, newMarkdownDoc);
-
+                if(settings.debug) {
+                    console.info("cmValue", cmValue, newMarkdownDoc);
+                }
                 newMarkdownDoc = editormd.$filterXSS(newMarkdownDoc);
 
                 //console.error("cmValue", cmValue, newMarkdownDoc);
 
                 this.markdownTextarea.text(cmValue);
 
+                cm.save();
 
                 if (settings.saveHTMLToTextarea)
                 {
@@ -2071,7 +2328,15 @@
                         }
                     }
 
-                    if (settings.flowChart || settings.sequenceDiagram)
+                    // 渲染脑图
+                    if(settings.mindMap){
+                        setTimeout(function(){
+                            _this.mindmapRender();
+                        },10)
+
+                    }
+
+                    if (settings.flowChart || settings.sequenceDiagram || settings.mermaid)
                     {
                         flowchartTimer = setTimeout(function(){
                             clearTimeout(flowchartTimer);
@@ -2368,7 +2633,7 @@
 
             this.codeMirror.css("border-right", "1px solid #ddd").width(this.editor.width() / 2);
 
-            timer = undefined;
+            timer = 0;
 
             this.save().resize();
 
@@ -2482,40 +2747,56 @@
                 toolbar.find(".fa[name=preview]").toggleClass("active");
             }
 
-            codeMirror.hide();
+            // codeMirror.hide();
+            codeMirror.toggle();
 
-            this.state.preview = true;
+            var escHandle = function(event) {
+                if (event.shiftKey && event.keyCode === 27) {
+                    _this.previewed();
+                }
+            };
 
-            if (this.state.fullscreen) {
-                preview.css("background", "#fff");
-            }
-
-            editor.find("." + this.classPrefix + "preview-close-btn").show().bind(editormd.mouseOrTouch("click", "touchend"), function(){
-                _this.previewed();
-            });
-
-            if (!settings.watch)
+            if (codeMirror.css("display") === "none") // 为了兼容Zepto，而不使用codeMirror.is(":hidden")
             {
-                this.save();
+                this.state.preview = true;
+
+                if (this.state.fullscreen) {
+                    preview.css("background", "#fff");
+                }
+
+                editor.find("." + this.classPrefix + "preview-close-btn").show().bind(editormd.mouseOrTouch("click", "touchend"), function(){
+                    _this.previewed();
+                });
+
+                if (!settings.watch)
+                {
+                    this.save();
+                }
+                else
+                {
+                    previewContainer.css("padding", "");
+                }
+
+                previewContainer.addClass(this.classPrefix + "preview-active");
+
+                preview.show().css({
+                    position  : "",
+                    top       : 0,
+                    width     : editor.width(),
+                    height    : (settings.autoHeight && !this.state.fullscreen) ? "auto" : editor.height()
+                });
+
+                if (this.state.loaded)
+                {
+                    $.proxy(settings.onpreviewing, this)();
+                }
+
+                $(window).bind("keyup", escHandle);
             }
             else
             {
-                previewContainer.css("padding", "");
-            }
-
-            previewContainer.addClass(this.classPrefix + "preview-active");
-
-            preview.show().css({
-                position  : "",
-                top       : 0,
-                width     : editor.width(),
-                height : editor.height(),
-                //height    : (settings.autoHeight && !this.state.fullscreen) ? "auto" : editor.height()
-            });
-
-            if (this.state.loaded)
-            {
-                $.proxy(settings.onpreviewing, this)();
+                $(window).unbind("keyup", escHandle);
+                this.previewed();
             }
         },
 
@@ -2560,8 +2841,8 @@
                 background : null,
                 position   : "absolute",
                 width      : editor.width() / 2,
-                height     : editor.height() - toolbarHeight,
-                top        : toolbarHeight,
+                height     : (settings.autoHeight && !this.state.fullscreen) ? "auto" : editor.height() - toolbarHeight,
+                top        : (settings.toolbar)    ? toolbarHeight : 0
             });
 
             if (this.state.loaded)
@@ -2593,6 +2874,16 @@
                 toolbar.find(".fa[name=fullscreen]").parent().toggleClass("active");
             }
 
+            var escHandle = function(event) {
+                if (!event.shiftKey && event.keyCode === 27)
+                {
+                    if (state.fullscreen)
+                    {
+                        _this.fullscreenExit();
+                    }
+                }
+            };
+
             if (!editor.hasClass(fullscreenClass))
             {
                 state.fullscreen = true;
@@ -2608,9 +2899,11 @@
 
                 $.proxy(settings.onfullscreen, this)();
 
+                $(window).bind("keyup", escHandle);
             }
             else
             {
+                $(window).unbind("keyup", escHandle);
                 this.fullscreenExit();
             }
 
@@ -2920,102 +3213,176 @@
         h1 : function() {
             var cm        = this.cm;
             var cursor    = cm.getCursor();
+            // var selection = cm.getLine(cursor.line);
             var selection = cm.getSelection();
-
-            if (cursor.ch !== 0)
-            {
-                cm.setCursor(cursor.line, 0);
-                cm.replaceSelection("# " + selection);
-                cm.setCursor(cursor.line, cursor.ch + 2);
+            var patt1=new RegExp("^#{1}[ ]");//如果存在H1
+            var patt2=new RegExp("^#{1,6}[ ]");//如果存在H2-H6
+            //如果存在H1,取消H1的设置
+            if (patt1.test(selection)===true){
+                selection=selection.replace(/^#{1}[ ]/,"");
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection(selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch -2);
             }
-            else
+            //如果存在H1-H6,取消H2-H6,并替换为H1
+            else if(patt2.test(selection)===true){
+                selection=selection.replace(/^#{1,6}[ ]/,"");
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection("# "+selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch +2);
+
+            }else
+            //设置为H1
             {
-                cm.replaceSelection("# " + selection);
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection("# "+selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch +2);
             }
         },
 
         h2 : function() {
             var cm        = this.cm;
             var cursor    = cm.getCursor();
+            // var selection = cm.getLine(cursor.line);
             var selection = cm.getSelection();
-
-            if (cursor.ch !== 0)
-            {
-                cm.setCursor(cursor.line, 0);
-                cm.replaceSelection("## " + selection);
-                cm.setCursor(cursor.line, cursor.ch + 3);
-            }
-            else
-            {
-                cm.replaceSelection("## " + selection);
+            var patt1=new RegExp("^#{2}[ ]");//如果存在H1
+            var patt2=new RegExp("^#{1,6}[ ]");//如果存在H1-H6
+            //如果存在H2,取消H2的设置
+            if (patt1.test(selection)===true){
+                selection=selection.replace(/^#{2}[ ]/,"");
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection(selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch -3);
+            }else if(patt2.test(selection)===true){
+                selection=selection.replace(/^#{1,6}[ ]/,"");
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection("## "+selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch +3);
+            
+            }else{
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection("## "+selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch +3);
             }
         },
 
         h3 : function() {
             var cm        = this.cm;
             var cursor    = cm.getCursor();
+            // var selection = cm.getLine(cursor.line);
             var selection = cm.getSelection();
-
-            if (cursor.ch !== 0)
-            {
-                cm.setCursor(cursor.line, 0);
-                cm.replaceSelection("### " + selection);
-                cm.setCursor(cursor.line, cursor.ch + 4);
+            var patt1=new RegExp("^#{3}[ ]");//如果存在H3
+            var patt2=new RegExp("^#{1,6}[ ]");//如果存在H1-H6
+            //如果存在H3,取消H3的设置
+            if (patt1.test(selection)===true){
+                selection=selection.replace(/^#{3}[ ]/,"");
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection(selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch -4);
             }
-            else
+            //如果存在H1-H6,取消H1-H6,并替换为H3
+            else if(patt2.test(selection)===true){
+                selection=selection.replace(/^#{1,6}[ ]/,"");
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection("### "+selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch +4);
+
+            }else
+            //设置为H3
             {
-                cm.replaceSelection("### " + selection);
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection("### "+selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch +4);
             }
         },
 
         h4 : function() {
             var cm        = this.cm;
             var cursor    = cm.getCursor();
+            // var selection = cm.getLine(cursor.line);
             var selection = cm.getSelection();
-
-            if (cursor.ch !== 0)
-            {
-                cm.setCursor(cursor.line, 0);
-                cm.replaceSelection("#### " + selection);
-                cm.setCursor(cursor.line, cursor.ch + 5);
+            var patt1=new RegExp("^#{4}[ ]");//如果存在H4
+            var patt2=new RegExp("^#{1,6}[ ]");//如果存在H1-H6
+            //如果存在H4,取消H4的设置
+            if (patt1.test(selection)===true){
+                selection=selection.replace(/^#{4}[ ]/,"");
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection(selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch -5);
             }
-            else
+            //如果存在H1-H6,取消H1-H6,并替换为H4
+            else if(patt2.test(selection)===true){
+                selection=selection.replace(/^#{1,6}[ ]/,"");
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection("#### "+selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch +5);
+
+            }else
+            //设置为H4
             {
-                cm.replaceSelection("#### " + selection);
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection("#### "+selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch +5);
             }
         },
 
         h5 : function() {
             var cm        = this.cm;
             var cursor    = cm.getCursor();
+            // var selection = cm.getLine(cursor.line);
             var selection = cm.getSelection();
-
-            if (cursor.ch !== 0)
-            {
-                cm.setCursor(cursor.line, 0);
-                cm.replaceSelection("##### " + selection);
-                cm.setCursor(cursor.line, cursor.ch + 6);
+            var patt1=new RegExp("^#{5}[ ]");//如果存在H5
+            var patt2=new RegExp("^#{1,6}[ ]");//如果存在H1-H6
+            //如果存在H5,取消H5的设置
+            if (patt1.test(selection)===true){
+                selection=selection.replace(/^#{5}[ ]/,"");
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection(selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch -6);
             }
-            else
+            //如果存在H1-H6,取消H1-H6,并替换为H5
+            else if(patt2.test(selection)===true){
+                selection=selection.replace(/^#{1,6}[ ]/,"");
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection("##### "+selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch +6);
+
+            }else
+            //设置为H5
             {
-                cm.replaceSelection("##### " + selection);
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection("##### "+selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch +6);
             }
         },
 
         h6 : function() {
             var cm        = this.cm;
             var cursor    = cm.getCursor();
+            // var selection = cm.getLine(cursor.line);
             var selection = cm.getSelection();
-
-            if (cursor.ch !== 0)
-            {
-                cm.setCursor(cursor.line, 0);
-                cm.replaceSelection("###### " + selection);
-                cm.setCursor(cursor.line, cursor.ch + 7);
+            var patt1=new RegExp("^#{6}[ ]");//如果存在H6
+            var patt2=new RegExp("^#{1,6}[ ]");//如果存在H1-H6
+            //如果存在H6,取消H6的设置
+            if (patt1.test(selection)===true){
+                selection=selection.replace(/^#{6}[ ]/,"");
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection(selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch -7);
             }
-            else
+            //如果存在H1-H6,取消H1-H6,并替换为H6
+            else if(patt2.test(selection)===true){
+                selection=selection.replace(/^#{1,6}[ ]/,"");
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection("###### "+selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch +7);
+
+            }else
+            //设置为H6
             {
-                cm.replaceSelection("###### " + selection);
+                cm.setSelection({line:cursor.line, ch:0}, {line:cursor.line+1, ch:0 });
+                cm.replaceSelection("###### "+selection+"\n");
+                cm.setCursor(cursor.line, cursor.ch +7);
             }
         },
 
@@ -3023,20 +3390,35 @@
             var cm        = this.cm;
             var cursor    = cm.getCursor();
             var selection = cm.getSelection();
-
+            var patt1=new RegExp("^-{1}[ ]");
+            var cnt =0;
+            //如果未选择，将该行设置为无序列表
             if (selection === "")
             {
+                cm.setCursor(cursor.line, 0);
                 cm.replaceSelection("- " + selection);
+                cm.setCursor(cursor.line, cursor.ch + 2);
             }
             else
             {
                 var selectionText = selection.split("\n");
-
+                //判断取中内容是否已作无序列表标记
                 for (var i = 0, len = selectionText.length; i < len; i++)
                 {
-                    selectionText[i] = (selectionText[i] === "") ? "" : "- " + selectionText[i];
+                    if (patt1.test(selectionText[i])===true ){cnt++;}
                 }
-
+                //如果全作了无序列表标记，取消标记
+                if(cnt===selectionText.length){
+                    for (var i = 0, len = selectionText.length; i < len; i++){
+                        selectionText[i] = (selectionText[i] === "") ? "" : selectionText[i].replace(patt1,"");
+                    }
+                }else
+                //对未打上无序列表标记，打上标记
+                {
+                    for (var i = 0, len = selectionText.length; i < len; i++){
+                        selectionText[i] = (selectionText[i] === "") ? "" : "- " + selectionText[i].replace(patt1,"");
+                    }
+                }
                 cm.replaceSelection(selectionText.join("\n"));
             }
         },
@@ -3045,20 +3427,34 @@
             var cm        = this.cm;
             var cursor    = cm.getCursor();
             var selection = cm.getSelection();
-
-            if(selection === "")
+            var patt1=new RegExp("^[0-9]+[\.][ ]");
+            var cnt =0;
+            //如果未选择，将该行设置为有序列表
+            if (selection === "")
             {
+                cm.setCursor(cursor.line, 0);
                 cm.replaceSelection("1. " + selection);
+                cm.setCursor(cursor.line, cursor.ch + 3);
             }
             else
             {
                 var selectionText = selection.split("\n");
-
+                //判断取中内容是否已作有序列表标记
                 for (var i = 0, len = selectionText.length; i < len; i++)
                 {
-                    selectionText[i] = (selectionText[i] === "") ? "" : (i+1) + ". " + selectionText[i];
+                    if (patt1.test(selectionText[i])===true ){cnt++;}
                 }
-
+                //如果全作了有序列表标记，取消标记
+                if(cnt===selectionText.length){
+                    for (var i = 0, len = selectionText.length; i < len; i++){
+                        selectionText[i] = (selectionText[i] === "") ? "" : selectionText[i].replace(/^[0-9]+[\.][ ]/,"");
+                    }
+                } else {
+                    //对未打上有序列表标记，打上标记
+                    for (var i = 0, len = selectionText.length; i < len; i++){
+                        selectionText[i] = (selectionText[i] === "") ? "" : (i+1) + ". " + selectionText[i].replace(patt1,"");
+                    }
+                }
                 cm.replaceSelection(selectionText.join("\n"));
             }
         },
@@ -3093,6 +3489,10 @@
             this.executePlugin("linkDialog", "link-dialog/link-dialog");
         },
 
+        "reference-link" : function() {
+            this.executePlugin("referenceLinkDialog", "reference-link-dialog/reference-link-dialog");
+        },
+
         pagebreak : function() {
             if (!this.settings.pageBreak)
             {
@@ -3104,6 +3504,10 @@
             var selection = cm.getSelection();
 
             cm.replaceSelection("\r\n[========]\r\n");
+        },
+
+        image : function() {
+            this.executePlugin("imageDialog", "image-dialog/image-dialog");
         },
 
         code : function() {
@@ -3176,6 +3580,11 @@
             this.executePlugin("helpDialog", "help-dialog/help-dialog");
         },
 
+        changetheme : function() {
+            this.setEditorTheme((this.settings.editorTheme=="default")?"pastel-on-dark":"default");
+            this.setPreviewTheme((this.settings.previewTheme=="")?"dark":"");
+        },
+
         info : function() {
             this.showInfoDialog();
         }
@@ -3194,7 +3603,7 @@
         [key + "-B"]       : "bold",  // if this is string ==  editormd.toolbarHandlers.xxxx
         [key + "-D"]       : "datetime",
 
-        [key + "Ctrl-E"]       : function() { // emoji
+        [key + "-E"]       : function() { // emoji
             var cm        = this.cm;
             var cursor    = cm.getCursor();
             var selection = cm.getSelection();
@@ -3216,7 +3625,7 @@
         [key + "-I"]       : "italic",
         [key + "-K"]       : "code",
 
-        "Ctrl-L"        : function() {
+        [key + "-L"]        : function() {
             var cm        = this.cm;
             var cursor    = cm.getCursor();
             var selection = cm.getSelection();
@@ -3231,7 +3640,7 @@
         },
         [key + "-U"]         : "list-ul",
 
-        "Shift-Ctrl-A"   : function() {
+        ["Shift-" + key + "-A"]   : function() {
             var cm        = this.cm;
             var cursor    = cm.getCursor();
             var selection = cm.getSelection();
@@ -3289,6 +3698,7 @@
             }
         },
 
+        ["Shift-" + key + "-Alt-I"]     : "image",
         ["Shift-" + key + "-L"]         : "link",
         ["Shift-" + key + "-O"]         : "list-ol",
         ["Shift-" + key + "-P"]         : "preformatted-text",
@@ -3397,6 +3807,7 @@
             tex                  : false,          // TeX(LaTeX), based on KaTeX
             flowChart            : false,          // flowChart.js only support IE9+
             sequenceDiagram      : false,          // sequenceDiagram.js only support IE9+
+            mermaid              : true,
         };
 
         var settings        = $.extend(defaults, options || {});
@@ -3413,6 +3824,77 @@
         var faIconReg       = regexs.fontAwesome;
         var editormdLogoReg = regexs.editormdLogo;
         var pageBreakReg    = regexs.pageBreak;
+
+        markedRenderer.blockquote = function($quote) {
+
+            var quoteBegin = "";
+
+            var ps = $quote.match(/<p\s.*?>/i);
+            if(ps !== null) {
+                quoteBegin = ps[0];
+                $quote = $quote.substr(quoteBegin.length);
+            }
+            var $class = "default";
+
+            if($quote.indexOf("[info]") === 0){
+                $class = "info";
+                $quote = $quote.substr(6);
+            }else if($quote.indexOf("[warning]") === 0){
+                $class = "warning";
+                $quote = $quote.substr(9);
+            }else if($quote.indexOf("[success]") === 0){
+                $class = "success";
+                $quote = $quote.substr(9);
+            }else if($quote.indexOf("[danger]") === 0){
+                $class = "danger";
+                $quote = $quote.substr(8);
+            }
+
+            return '<blockquote class="'+$class+'">\n' + quoteBegin + $quote + '</blockquote>\n';
+        };
+
+        markedRenderer.image = function(href,title,text) {
+            var attr = "";
+            var begin = "";
+            var end = "";
+
+            if(href && href !== ""){
+                var a =  document.createElement('a');
+                a.href = href;
+                var attrs = a.hash.match(/size=\d+x\d+/i);
+                if(attrs !== null) {
+                    a.hash = a.hash.replace(attrs[0],"");
+                    href = a.href;
+                    attrs = attrs[0].replace("size=","").split("x");
+                    if(attrs[0] > 0) {
+                        attr += " width=\"" + attrs[0] + "\""
+                    }
+                    if(attrs[1] > 0) {
+                        attr += " height=\"" + attrs[1] + "\""
+                    }
+                }
+                attrs = a.hash.match(/align=(center|left|right)/i)
+                if (attrs !== null) {
+                    var hash = a.hash.replace(attrs[0],"");
+                    if (hash.indexOf("#&") === 0) {
+                        hash = "#" + hash.substr(2);
+                    }
+                    a.hash = hash;
+
+                    href = a.href;
+                    attrs = attrs[0].replace("align=","");
+                    end = "</p>";
+                    if(attrs === "center"){
+                        begin = '<p align="center">';
+                    }else if (attrs === "left") {
+                        begin = '<p align="left">';
+                    }else if (attrs === "right") {
+                        begin = '<p align="right">';
+                    }
+                }
+            }
+            return begin + "<img src=\""+href+"\" title=\""+title+"\" alt=\""+text+"\" "+attr+">" + end;
+        };
 
         markedRenderer.emoji = function(text) {
 
@@ -3492,7 +3974,7 @@
                     });
 
                     text = text.replace(atLinkReg, function($1, $2) {
-                        return "<a href=\"" + editormd.urls.atLinkBase + "" + $2 + "\" title=\"&#64;" + $2 + "\" class=\"at-link\">" + $1 + "</a>";
+                        return "<a href=\"" + editormd.urls.atLinkBase + "" + $2 + "\" title=\"&#64;" + $2 + "\" class=\"at-link\" target='_blank'>" + $1 + "</a>";
                     }).replace(/_#_&#64;_#_/g, "@");
                 }
 
@@ -3522,8 +4004,14 @@
                     return "";
                 }
             }
+            if(href.indexOf("@") === 0){
+                return '<a name="'+ href.substr(1) + '"></a>';
+            }
 
             var out = "<a href=\"" + href + "\" target=\"_blank\" rel=\"noopener noreferrer\"";
+            if(href.indexOf("http://") === 0 || href.indexOf("https://") === 0) {
+                out += "target=\"_blank\"";
+            }
 
             if (atLinkReg.test(title) || atLinkReg.test(text))
             {
@@ -3569,11 +4057,13 @@
             var toc = {
                 text  : text,
                 level : level,
-                slug  : escapedText
+                slug  : escapedText,
+                id : id
             };
 
             var isChinese = /^[\u4e00-\u9fa5]+$/.test(text);
-            var id        = (isChinese) ? escape(text).replace(/\%/g, "") : text.toLowerCase().replace(/[^\w]+/g, "-");
+            var id        = (isChinese) ? encodeURIComponent(text).replace(/\%/g, "") : text.toLowerCase().replace(/[^\w]+/g, "-");
+            // var id = Math.floor(Math.random() * 1000000000 ).toString(36);
 
             markdownToC.push(toc);
 
@@ -3625,6 +4115,17 @@
             {
                 return "<div class=\"sequence-diagram\">" + code + "</div>";
             }
+            else  if (lang === "mermaid"){
+                var $chars = 'ABCDEFGHJKLMNOPQRSTUVWXYZabcdefhijlkmnopqrstuvwxyz012345678';
+
+                var maxPos = $chars.length;
+                var id = '';
+                for (var i = 0; i < 4; i++) {
+                    id += $chars.charAt(Math.floor(Math.random() * maxPos));
+                }
+
+                return "<div class=\"lang-mermaid hide\" data-anchor-id=\""+id+"\">" + code + "</div>";
+            }
             else if ( lang === "flow")
             {
                 return "<div class=\"flowchart\">" + code + "</div>";
@@ -3633,9 +4134,29 @@
             {
                 return "<p class=\"" + editormd.classNames.texDisplay + "\">" + code + "</p>";
             }
+            else if (/^mindmap/i.test(lang)){
+                var len = 9 || 32;
+                var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+                var maxPos = $chars.length;
+                var map_id = '';
+                var custom_height;
+                var h = lang.split('>')[1];
+                if (h != undefined) {
+                    custom_height = h;
+                } else {
+                    custom_height = 150;
+                }
+                for (var i = 0; i < len; i++) {
+                    map_id += $chars.charAt(Math.floor(Math.random() * maxPos));
+                }
+                return "<svg class='mindmap' style='width:100%;min-height=150px;height:"+custom_height+"px;' id='mindmap-"+ map_id +"'>"+code+"</svg>";
+            }
+            if (lang === "drawio") {
+                var svgCode = decodeURIComponent(escape(window.atob(code)))
+                return "<div class=\"svg\" style=\"overflow: auto; padding: 10px;\">" + svgCode + "</div>"
+            }
             else
             {
-
                 return marked.Renderer.prototype.code.apply(this, arguments);
             }
         };
@@ -3659,6 +4180,9 @@
             {
                 return "<li>" + this.atLink(this.emoji(text)) + "</li>";
             }
+        };
+        markedRenderer.checkbox = function(checked){
+            return checked ? '<i class="fa fa-check-square"></i> ' : '<i class="fa fa-square-o"></i> ';
         };
 
         return markedRenderer;
@@ -3687,6 +4211,7 @@
         {
             var text  = toc[i].text;
             var level = toc[i].level;
+            var id    = toc[i].id;
 
             if (level < startLevel) {
                 continue;
@@ -3705,7 +4230,7 @@
                 html += "</ul></li>";
             }
 
-            html += "<li><a class=\"toc-level-" + level + "\" href=\"#" + text + "\" level=\"" + level + "\">" + text + "</a><ul>";
+            html += "<li class=\"directory-item\"><a class=\"directory-item-link directory-item-link-" + level + " toc-level-" + level + "\" href=\"#" + id + "\" level=\"" + level + "\">" + text + "</a><ul>";
             lastLevel = level;
         }
 
@@ -3799,6 +4324,92 @@
     };
 
     /**
+     * 简单地过滤指定的HTML标签
+     * Filter custom html tags
+     *
+     * @param   {String}   html          要过滤HTML
+     * @param   {String}   filters       要过滤的标签
+     * @returns {String}   html          返回过滤的HTML
+     */
+
+    editormd.filterHTMLTags = function(html, filters) {
+
+        if (typeof html !== "string") {
+            html = new String(html);
+        }
+
+        if (typeof filters !== "string") {
+            return html;
+        }
+
+        var expression = filters.split("|");
+        var filterTags = expression[0].split(",");
+        var attrs      = expression[1];
+
+        for (var i = 0, len = filterTags.length; i < len; i++)
+        {
+            var tag = filterTags[i];
+
+            html = html.replace(new RegExp("\<\s*" + tag + "\s*([^\>]*)\>([^\>]*)\<\s*\/" + tag + "\s*\>", "igm"), "");
+        }
+
+        //return html;
+
+        if (typeof attrs !== "undefined")
+        {
+            var htmlTagRegex = /\<(\w+)\s*([^\>]*)\>([^\>]*)\<\/(\w+)\>/ig;
+
+            if (attrs === "*")
+            {
+                html = html.replace(htmlTagRegex, function($1, $2, $3, $4, $5) {
+                    return "<" + $2 + ">" + $4 + "</" + $5 + ">";
+                });
+            }
+            else if (attrs === "on*")
+            {
+                html = html.replace(htmlTagRegex, function($1, $2, $3, $4, $5) {
+                    var el = $("<" + $2 + ">" + $4 + "</" + $5 + ">");
+                    var _attrs = $($1)[0].attributes;
+                    var $attrs = {};
+
+                    $.each(_attrs, function(i, e) {
+                        if (e.nodeName !== '"') $attrs[e.nodeName] = e.nodeValue;
+                    });
+
+                    $.each($attrs, function(i) {
+                        if (i.indexOf("on") === 0) {
+                            delete $attrs[i];
+                        }
+                    });
+
+                    el.attr($attrs);
+
+                    var text = (typeof el[1] !== "undefined") ? $(el[1]).text() : "";
+
+                    return el[0].outerHTML + text;
+                });
+            }
+            else
+            {
+                html = html.replace(htmlTagRegex, function($1, $2, $3, $4) {
+                    var filterAttrs = attrs.split(",");
+                    var el = $($1);
+                    el.html($4);
+
+                    $.each(filterAttrs, function(i) {
+                        el.attr(filterAttrs[i], null);
+                    });
+
+                    return el[0].outerHTML;
+                });
+            }
+        }
+
+        return html;
+    };
+    editormd.$filterXSS   = editormd.filterHTMLTags;
+
+    /**
      * 将Markdown文档解析为HTML用于前台显示
      * Parse Markdown to HTML for Font-end preview.
      *
@@ -3828,7 +4439,9 @@
             emoji                : false,
             flowChart            : false,
             sequenceDiagram      : false,
-            previewCodeHighlight : true
+            previewCodeHighlight : true,
+            mermaid              : true,
+            mindMap              : true, //思维导图
         };
 
         editormd.$marked  = marked;
@@ -3858,6 +4471,8 @@
             emailLink            : settings.emailLink,        // for mail address auto link
             flowChart            : settings.flowChart,
             sequenceDiagram      : settings.sequenceDiagram,
+            mermaid              : settings.mermaid,
+            mindMap              : settings.mindMap, // 思维导图
             previewCodeHighlight : settings.previewCodeHighlight,
         };
 
@@ -3872,7 +4487,7 @@
             smartypants : true
         };
 
-		// markdownDoc = new String(markdownDoc);
+		markdownDoc = new String(markdownDoc);
 
         var markdownParsed = marked.parse(markdownDoc, markedOptions);
 
@@ -3912,7 +4527,7 @@
         {
             div.find("pre").addClass("prettyprint linenums");
             //TODO: fix later if we decide to generate html
-            prettyPrint()
+            prettyPrint();
             // prettyPrint($.proxy(editormd.settings.fixCodeBlocks, editormd));
         }
 
@@ -3924,6 +4539,9 @@
 
             if (settings.sequenceDiagram) {
                 div.find(".sequence-diagram").sequenceDiagram({theme: "simple"});
+            }
+            if (settings.mermaid) {
+                window.mermaid.init(void 0,  div.find(".lang-mermaid"));
             }
         }
 
@@ -3949,6 +4567,18 @@
             {
                 katexHandle();
             }
+        }
+
+        // 前台渲染脑图
+        if(settings.mindMap){
+            var mindmapHandle = function(){
+                div.find(".mindmap").each(function(){
+                    var mmap  = $(this);
+                    var md_data = window.markmap.transform(mmap.text().trim());
+                    window.markmap.markmap("svg#"+this.id,md_data)
+                });
+            }
+            mindmapHandle();
         }
 
         div.getMarkdown = function() {
@@ -4530,7 +5160,14 @@
 
         return datefmt;
     };
-
+    /**
+     * 获取指定行的内容
+     * @param n
+     * @returns {*}
+     */
+    editormd.getLine = function(n) {
+        return this.cm.getLine(n);
+    };
     return editormd;
 
 }));
