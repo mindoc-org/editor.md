@@ -74,22 +74,24 @@
                     }         
                     
                     var escapedText    = text.toLowerCase().replace(/[^\w]+/g, "-");
+                    
+                    var isChinese = /^[\u4e00-\u9fa5]+$/.test(text);
+                    var id = (isChinese) ? escape(text).replace(/\%/g, "") : text.toLowerCase().replace(/[^\w]+/g, "-");
+
                     var toc = {
                         text : text,
                         level : level,
-                        slug  : escapedText
+                        slug  : escapedText,
+                        id: id
                     };
                     
                     console.log("text =>", text);
-
-                    var isChinese = /^[\u4e00-\u9fa5]+$/.test(text);
-                    var id = (isChinese) ? escape(text).replace(/\%/g, "") : text.toLowerCase().replace(/[^\w]+/g, "-");
 
                     markdownToC.push(toc);
                     
                     console.log("toc =>", toc);
                     
-                    var headingHTML = "<h" + level + " id=\"h"+ level + "-" + this.options.headerPrefix + id +"\">";
+                    var headingHTML = "<h" + level + " id=\"h"+ level + "-" + this.options.headerPrefix + id +"\" class=\"markdown-heading\">";
 
                     /*return "<h" + level + " id=\"h"+ level + "-" + this.options.headerPrefix + id +"\">" +
                            "<a href=\"#" + text + "\" name=\"" + text + "\" class=\"anchor\"></a>" +
